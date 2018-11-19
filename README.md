@@ -60,21 +60,21 @@ Ellipsis (…)|Items that can be repeated.
 
 <details><summary>View additional syntax conventions</summary>
 
-The Transfer CLI uses the same syntax followed by other Microsoft-based CLI tools. This list includes common CLI syntax conventions:
+The File Migration CLI uses the same syntax followed by other Microsoft-based CLI tools. This list includes common CLI syntax conventions:
 
 * Use a colon between a command and a parameter values use:
   ```
-  /command:transfer
+  /command:sync
   ```
 * Enclose parameter values containing spaces with double quotation marks: 
   ```
-  /command:transfer /sourcepaths:"C:\Windows"
+  /command:sync /targetpath:"\\files\SomeFolder\Files"
   ```
 
 * Use a plus (+) or minus (-) sign to flag parameters as enabled and disabled respectively:
   ```
-  /command:transfer  /interactive+ (enable)
-  /command:transfer  /interactive- (disable)
+  /command:sync  /skipinv+ (enable)
+  /command:sync  /skipinv- (disable)
   ```
 * Use a semicolon to delimited two or more parameters consisting of name-value pairs:
   ```
@@ -174,7 +174,7 @@ This list describes the methods available for authenticating to a target through
      Interactive login with Okta support has the following general command format:
 
      ```
-     Relativity.Transfer.Console.exe /command:<YourCommand> [ParametersForCommand] /url:<"Value"> /login+ /oktaforce+
+     Relativity.Migration.Console.exe /command:<YourCommand> [ParametersForCommand] /url:<"Value"> /login+ /oktaforce+
      ```
      The following command uses the /oktaforce+ parameter for an interactive login with Okta:
 
@@ -378,10 +378,10 @@ This section includes the following additional information about the File Migrat
 
 <details><summary>View remote server paths</summary>
 
-The Transfer CLI supports both absolute and relative paths. The Transfer CLI leverages path resolvers used by the underlying TAPI architecture to adapt paths from one format to another. It supports the following path architecture:
+The  File Migration CLI supports both absolute and relative paths. The File Migration CLI leverages path resolvers used by the underlying TAPI architecture to adapt paths from one format to another. It supports the following path architecture:
 
  * **On-premises Relativity** - supports UNC paths. For more information, see [Absolute paths used by on-premises Relativity](#absolute-paths-used-by-on-premises-Relativity).
-* **RelativityOne** - supports only UNIX-style relative paths, because it is deployed on Aspera. By default, the Transfer CLI can resolve UNC paths to relative paths for backwards compatibility. See [UNIX-style relative paths used by RelativityOne](#unix-style-relative-paths-used-by-RelativityOne).
+* **RelativityOne** - supports only UNIX-style relative paths, because it is deployed on Aspera. By default, the File Migration CLI can resolve UNC paths to relative paths for backwards compatibility. See [UNIX-style relative paths used by RelativityOne](#unix-style-relative-paths-used-by-RelativityOne).
 
 ### Absolute paths used by on-premises Relativity
 An absolute UNC path is a fully qualified domain name (FQDN). The following absolute path represents a _Temp_ folder in a workspace with the identifier 1027541.
@@ -434,7 +434,7 @@ For RelativityOne, all Aspera servers are configured at the root of each support
 
 <details><summary>View available commands</summary>
 
-The following table lists the commands available in the Transfer CLI:
+The following table lists the commands available in the File Migration CLI:
 
 Commands|Version|Description
 --------|----------|---------------
@@ -451,7 +451,7 @@ Commands|Version|Description
 
 <details><summary>View exit codes</summary>
 
-The Transfer CLI supports standard exit codes for command-line tools. The following table list supported exist codes:
+The File Migration CLI supports standard exit codes for command-line tools. The following table list supported exist codes:
 
 Exit code|Description
 -----------|--------------
@@ -484,7 +484,7 @@ The File Migration CLI uses standard Relativity logging configuration. **_A LogC
     <rule system="*" loggingLevel="Information" sink="File1;Seq1;Http1"/>
   </rules>
   <sinks>
-    <fileSink name="File1" logFileLocation="%temp%\Relativity-Transfer\Transfer-Cli\" maxFileSizeInMB ="10000" />
+    <fileSink name="File1" logFileLocation="%temp%\Relativity-Migration\Migration-Cli\" maxFileSizeInMB ="10000" />
     <seqSink name="Seq1" serverUrl="http://localhost:5341" batchSizeLimit="50" waitPeriodSeconds="15" />
     <relativityHttpSink name="Http1" batchSizeLimit="50" waitPeriodSeconds="15" />
   </sinks>
@@ -496,7 +496,7 @@ The File Migration CLI uses standard Relativity logging configuration. **_A LogC
 The rolling file sink stores logs in _rolling_ log files in the user profile temp directory. The following path is used for the log directory:
 
 ```
-%temp%\Relativity-Transfer\Migration-Cli
+%temp%\Relativity-Migration\Migration-Cli
 ```
 
 </details>
