@@ -188,8 +188,9 @@ The following table describes each of the parameters used to log in to a target 
 
 Parameter|Description
 --------------|------------------
+/interactive{+\|-}|Enables or disables interactive mode, which requires a user to press the ENTER key or provide some other response before terminating a command. <br>**Note:** The default value is True. 
 /login{+\|-}|Enables or disables the launching of a login window. <br>**Note:** This parameter is required for interactive login, and for interactive login with Okta support. The default value is False.
-/oktaforce{+\|-}|Enables or disables the requirement to use the Okta provider to login. <br>**Note:** This parameter is required only for login with an Okta provider.
+/oktaforce{+\|-}|Enables or disables the requirement to use the Okta provider to login. Specify this parameter if you are running the File Migration CLI in an environment that doesn’t use the _HRDHint_ registry setting but requires an Okta login. <br>**Note:** To force an Okta login, you must also specify the /login+ parameter. The default value for /oktaforce is False.
 /password:{value}|The Relativity login password. <br>**Note:** This parameter is required only for username and password login.
 /url:{value}|The Relativity base URL for your environment. Don't enter the web service URL used by the Relativity Desktop Client, which has the format https://\<MyServiceName\>/RelativityWebAPI/.
 /username:{value}|The Relativity login name. <br>**Note:** This parameter is required only for username and password login.
@@ -206,7 +207,7 @@ Parameter|Description
 Setting up or updating local master or workspace databases has the following general command format:
 
 ``` 
-Relativity.Migration.Console.exe /command:sync /sqlinstance:<"Value"> {/sqluser:<"Value"> /sqlpwd:<"Value"> /login+ /oktaforce+ | /login+ /enforcessl- /sqlintegrated:+} /url:<"Value"> /targetpath:<"Value"> /sha1:<+ | -> /metadata:<+ | ->  /skipinv:<+ | ->  /skipnative:<+ | -> 
+Relativity.Migration.Console.exe /command:sync /sqlinstance:<"Value"> {/sqluser:<"Value"> /sqlpwd:<"Value"> /login+ /oktaforce+ | /login+ /enforcessl- /sqlintegrated:+} /url:<"Value"> {/targetpath:<"Value">|/fileshare:<"Value">} /sha1:<+ | -> /metadata:<+ | ->  /skipinv:<+ | ->  /skipnative:<+ | -> 
 ``` 
 
 The following example will setup the initial local master/workspace databases or perform local database updates for active workspaces.
@@ -220,7 +221,7 @@ Relativity.Migration.Console.exe /command:sync /sqlinstance:"SomeInstance.mycomp
 Synching a specific group of workspace databases has the following general command format:
 
 ``` 
-Relativity.Migration.Console.exe /command:sync /sqlinstance:<"Value"> {/sqluser:<"Value"> /sqlpwd:<"Value"> /login+ /oktaforce+ | /login+ /enforcessl- /sqlintegrated:+} /url:<"Value"> /targetpath:<"Value"> /sha1:<+ | -> /metadata:<+ | ->  /skipinv:<+ | ->  /skipnative:<+ | -> /workspaces:<"Value">
+Relativity.Migration.Console.exe /command:sync /sqlinstance:<"Value"> {/sqluser:<"Value"> /sqlpwd:<"Value"> /login+ /oktaforce+ | /login+ /enforcessl- /sqlintegrated:+} /url:<"Value"> {/targetpath:<"Value">|/fileshare:<"Value">} /sha1:<+ | -> /metadata:<+ | ->  /skipinv:<+ | ->  /skipnative:<+ | -> /workspaces:<"Value">
 ```
 
 The following example is the same as above but limits the sync to specific workspaces. 
@@ -237,14 +238,15 @@ The following table describes each of the parameters used in a migration command
 Parameter|Description
 --------------|------------------
 /dupfiles{+\|-}|Enables or disables the removal of duplicate files. During synchronization, this optimization increases the memory and CPU usage, and the time to completion, but it can significantly reduce the overall transfer time. <br>**Note:** The default value is True.
+/fileshare:{value}|The name, number, artifact identifier, or UNC path for a file share. For more information, see [UNC file paths](#unc-file-paths) and [Remote server paths](#remote-server-paths). <br>**Note:** You can optionally use the /fileshare parameter instead of the /targetpath.
 /maxsync:{value}|The maximum number of records to synchronize. Use this parameter to limit the number of records fetched with the sync command while debugging or troubleshooting. <br>**Note:** The default value is Int32.MaxValue.
 /metadata:{value}|Enables or disables the retrieval of file metadata, such as the length in bytes, for all source files. Although an expensive operation, we highly recommend enabling this setting because it provides verifiable migration results and eliminates more expensive server-side validation. <br>**Note:** The default value is True.
 /sha1{+\|-}|Enables or disables the calculation of SHA1 hashes for all source files. SHA1 hashes are used to validate the migration, so you should only modify this setting in a performance critical scenario. <br>**Note:** The default value is True.
 /skipinv{+\|-}|Enables or disables skipping Invariant files when executing the sync or migrate commands. <br>**Note:** The default value is False.
 /skipnative{+\|-}|Enables or disables skipping native files when executing the sync or migrate commands. <br>**Note:** The default value is False.
 /skiplongpaths{+\|-}|Enables or disables skipping long paths found during search path enumeraion. When this parameter is set to False, the enumeration fails if a path exceeds the maximum length defined by the File Migration CLI. <br>**Note:** The default value is False.
-/targetpath:{value}|The target path used for synching databases or workspaces, or for migrating native files. For more information, see [UNC file paths](#unc-file-paths) and [Remote server paths](#remote-server-paths). <br>**Note:** This parameter is required.
-/workspaces:{value}|The Artifact IDs for a list of Relativity workspace that you want to filter when running a specific command. This parameter supports a list of semicolon delimited Artifact IDs, such as _1171671;1171672;1171673_, or the start and end of range separated by a dash, such as _1171671-1171673_.
+/targetpath:{value}|The target path used for synching databases or workspaces, or for migrating native files. For more information, see [UNC file paths](#unc-file-paths) and [Remote server paths](#remote-server-paths). <br>**Note:** You can optionally use the /fileshare parameter instead of the /targetpath.
+/workspaces:{value}|The artifact IDs for a list of Relativity workspace that you want to filter on when running a specific command. This parameter supports the following syntax:<ul><li>A list of semicolon delimited artifact IDs, such as _1171671;1171672;1171673_</li><li>The start and end of range separated by a dash, such as _1171671-1171673_ </li></ul>
 
 </details>
 
@@ -271,15 +273,17 @@ The following table describes each of the parameters used in a migration command
 
 Parameter|Description
 --------------|--------------
+/fileshare:{value}|The name, number, artifact identifier, or UNC path for a file share. For more information, see [UNC file paths](#unc-file-paths) and [Remote server paths](#remote-server-paths). <br>**Note:** You can optionally use the /fileshare parameter instead of the /targetpath.
 /maxbytesperbatch:{value}|The maximum number of bytes per batch. <br>**Note:** The default value is 100GB.
 /maxfilesperbatch:{value}|The maximum number of files per batch. <br>**Note:** The default value is 1M.
 /maxhttpattempts:{value}|The maximum number of HTTP retry attempts. <br>**Note:** The default value is 5.
+/reset{+\|-}|Indicates whether reset the migration job or re-migrate all files. For example, you previously migrated a workspace, and then re-execute the migrate command on the same workspace. The File Migration CLI checks the database, and then quickly terminates the command because it determined that the files have been migrated. If you execute the migrate command with the /reset+ parameter, then the workspace is re-migrated.<br>**Note:** The default value is False.
 /skipinv{+\|-}|Enables or disables skipping Invariant files when executing the sync or migrate commands. <br>**Note:** The default value is False.
 /skipnative{+\|-}|Enables or disables skipping native files when executing the sync or migrate commands. <br>**Note:** The default value is False.
-/skiplongpaths{+\|-}|Enables or disables skipping long paths found during search path enumeraion. When this parameter is set to False, the enumeration fails if a path exceeds the maximum length defined by the File Migration CLI. <br>**Note:** The default value is False.
-/subjob:{value}|The subjob filter applied to certain migration commands. For example, if you set the value of this parameter to InvariantDbStorage, and executed the migrate command, only workspaces with files in the Invariant DB Storage table are migrated. Supported values include: None, WorkspaceDbFiles, InvariantDbStorage, InvariantDbPages, and InvariantTemporaryNative.
-/targetpath:{value}|The target path used for synching databases or workspaces, or for migrating native files. For more information, see [UNC file paths](#unc-file-paths) and [Remote server paths](#remote-server-paths). <br>**Note:** This parameter is required.
-/workspaces:{value}|The Artifact IDs for a list of Relativity workspace that you want to filter when running a specific command. This parameter supports a list of semicolon delimited Artifact IDs, such as _1171671;1171672;1171673_, or the start and end of range separated by a dash, such _1171671-1171673_.
+/skiplongpaths{+\|-}|Enables or disables skipping long paths found during search path enumeration. When this parameter is set to False, the enumeration fails if a path exceeds the maximum length defined by the File Migration CLI. <br>**Note:** The default value is False.
+/subjob:{value}|The subjob filter applied to certain migration commands. For example, if you set the value of this parameter to InvariantDbStorage, and executed the migrate command, only workspaces with files in the Invariant DB Storage table are migrated. Supported values include: <ul><li>None</li><li>WorkspaceDbFiles</li><li>InvariantDbStorage</li><li>InvariantDbPages</li><li>InvariantTemporaryNative</li></ul>
+/targetpath:{value}|The target path used for synching databases or workspaces, or for migrating native files. For more information, see [UNC file paths](#unc-file-paths) and [Remote server paths](#remote-server-paths). <br>**Note:** You can optionally use the /fileshare parameter instead of the /targetpath.
+/workspaces:{value}|The artifact IDs for a list of Relativity workspace that you want to filter on when running a specific command. This parameter supports the following syntax:<ul><li>A list of semicolon delimited artifact IDs, such as _1171671;1171672;1171673_</li><li>The start and end of range separated by a dash, such as _1171671-1171673_ </li></ul>
 
 </details>
 
@@ -299,7 +303,7 @@ The following table describes each of the parameters used in a report command. F
 
 Parameter|Description
 --------------|--------------
-/jobstatus:{value}|Indicates the job status filter applied to certain migration commands. For example, to run a report on completed jobs, you would set this parameter to Completed when executing the report command. Supported values include: None, InProgress, Completed, and Skipped. 
+/jobstatus:{value}|Indicates the job status filter applied to certain migration commands. For example, to run a report on completed jobs, you would set this parameter to Completed when executing the report command. Supported values include: <ul><li>None</li><li>InProgress</li><li>Completed</li><li>Skipped</li></ul> 
 
 </details>
 
@@ -325,7 +329,7 @@ The following table describes each of the parameters used in a migration command
 
 Parameter|Description
 ---------|--------------
-/workspaces:{value}|The Artifact IDs for a list of Relativity workspace that you want to filter when running a specific command. This parameter supports a list of semicolon delimited Artifact IDs, such as _1171671;1171672;1171673_, or the start and end of range separated by a dash, such as _1171671-1171673_.
+/workspaces:{value}|The artifact IDs for a list of Relativity workspace that you want to filter on when running a specific command. This parameter supports the following syntax:<ul><li>A list of semicolon delimited Artifact IDs, such as _1171671;1171672;1171673_</li><li>The start and end of range separated by a dash, such as _1171671-1171673_ </li></ul>
 
 </details>
 
@@ -507,7 +511,7 @@ The rolling file sink stores logs in _rolling_ log files in the user profile tem
 
 The File Migration CLI collects APM metrics **_for TBD commands_**. This functionality is enabled by default. For information about the metrics that are collected, see the [README.md file](https://github.com/relativitydev/transfer-api-samples/blob/master/README.md) for the TAPI.
 
-The following command performs a TBD and collects APM metrics. It includes the enabled  /apm+ parameter:
+The following command performs a TBD and collects APM metrics. It includes the enabled /apm+ parameter:
 
 ```
 Relativity.Migration.Console.exe /command:migrate /url:"https://hostname.mycompany.corp" /login+ /oktaforce+ /workspaces:"1171671;1171672;1171673" /apm+
