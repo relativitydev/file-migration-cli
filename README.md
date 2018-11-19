@@ -438,11 +438,11 @@ The following table lists the commands available in the File Migration CLI:
 
 Commands|Version|Description
 --------|----------|---------------
-[configdocs](#tapi-client-configuration-values)|TBD|TBD
-[csv](#generating-workspace-CSV-files)|TBD|TBD
-[migrate](#migrating-workspaces)|TBD|TBD
-[report](#generating-reports)|TBD|TBD
-[sync](#synchronizing-workspaces)|TBD|TBD
+[configdocs](#tapi-client-configuration-values)|TBD|Displays general and plugin-specific TAPI client configuration documentation. It includes the following information for each entry:<ul><li>Key </li><li>Description</li><li>Default value</li><li>Choices</li></ul>No additional parameters are required for this command.
+[csv](#generating-workspace-CSV-files)|TBD|Autogenerates a single CSV file per workspace. All files are stored in the CSV subfolder of the working directory. The file names have the following format: _EDDSxxxxxxx.csv_. When the migrate command is executed, the File Migration CLI uses the existing CSV file or autogenerates a file on the fly. You can optionally use this command to manually modify CSV files used for a workspace migration that fails due to unsupported migration rules or logic. The available parameters include:<ul><li>/workspaces (optional)</li><li>/jobstatus (optional)</li></ul>
+[migrate](#migrating-workspaces)|TBD|Executes the file migration process on a list of workspaces that you must supply. We recommend that you list three to five workspaces. As each workspace is migrated, File Migration CLI automatically updates the local database with the proper results. The available parameters include:<ul><li>/url</li><li>/workspaces</li><li>/jobstatus (optional)</li><li>/login (optional)</li><li>/enforcessl (optional)</li><li>/configuration (optional)</li></ul>
+[report](#generating-reports)|TBD|Displays migration results for each workspace to the standard output (stdout), including the workspace name and artifact ID, status, total migrated files and bytes, and the timestamps for the last synchronization and migration jobs. The available parameters include:<ul><li>/workspaces (optional)</li><li>/jobstatus (optional)</li></ul>
+[sync](#synchronizing-workspaces)|TBD|Accesses the on-premise EDDS and workspace databases, retrieves data from them, and creates local SQLite databases. When this command is run for the first time, it performs a _baseline_ migration, which creates the local databases. It can be run multiple times for _delta_ migrations that update the databases with changes made to active workspaces. The available parameters include:<ul><li>/sqlinstance</li><li>/sqlpwd</li><li>/sqluser</li><li>/url</li><li>/targetpath</li><li>/workspaces (optional)</li><li>/login (optional)</li><li>/enforcessl (optional)</li><li>/reset (optional)</li></ul>
 
 </details>
 
