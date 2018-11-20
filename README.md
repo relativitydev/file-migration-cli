@@ -4,13 +4,16 @@ The Relativity File Migration CLI is an application that supports **_TBD_** Add 
 
 This page contains the following information:
 
-
+* [Data flow overview](#data-flow-overview)
 * [Before you begin](#before-you-begin)
 * [Setting up the File Migration CLI](#setting-up-the-file-migration-cli)
-* [Data flow overview](#data-flow-overview)
 * [Common workflows using PowerShell commands](#common-workflows-using-powershell-commands)
 * [Command-line reference](#command-line-reference)
 * [Server paths, commands, and other reference information](#server-paths-commands-and-other-reference-information)
+
+## Data flow overview
+
+**_TBD_** Add overview of Data flow and diagram
 
 ## Before you begin
 
@@ -29,16 +32,59 @@ This page contains the following information:
 
 ## Setting up the File Migration CLI
 
-**_TBD_** Add steps for extracting to top level folder and other information
+You can execute commands for File Migration CLI by running PowerShell scripts or through the command-line. The following instructions describe how to set up the PowerShell scripts.
+
+**Note:** If you want to execute commands from the command-line, you only need to complete steps 1-3. For more information, see [Command-line reference](#command-line-reference).
+
+Review the following best practices:
+
+* Run the File Migration CLI from your local machine. While you can run it from a fileshare, the File Migration CLI performs better when it runs from a local machine.
+
+* Create a new top-level folder for each set of workspaces that you want to migrate. The File Migration CLI builds separate databases for each migration when you create separate top-level folders for them. The SQLite databases persist the data for each run on your local machine. For example, you might create a series of top-level folders, such as Phase 1, Phase 2, and so on.
 
 
-## Data flow overview
+Complete the following steps to set up PowerShell scripts for the File Migration CLI:
 
-**_TBD_** Add overview of Data flow and diagram
+1. Download the [Relativity.FileMigrator.zip](https://github.com/relativitydev/file-migrator-cli/releases) file.
+1. Create a top-level folder for the current migration job, and add the zip file to it.
+1. Extract the files from the Relativity.FileMigrator.zip file. Verify that  the following files and folder are were extracted:
+     * Setup.ps1 file
+     * Relativity.Migration.Console.exe 
+     * Templates folder
+     * Other miscellaneous files
+1. In the Relativity.FileMigrator folder, locate the **Setup.ps1** script.
+1. Right-click on the script, and select **Run with PowerShell**.
+1. Enter the following information in the PowerShell console window:
 
+      Entry|Description
+   ------------|---------------
+   SQL authentication| **I** indicates integrated authentication, and **S** indicates SQL authentication. 
+   Relativity SQL instance| The DNS name of your SQL instance, such as _sqlinstance.mycompany.corp_.
+   Relativity URL| The web URL for your destination Relativity instance, such as _<span>https:/</span>/hostname.mycompany.corp_.
+   Target path| The UNC path for the destination fileshare, such as _\\\files\T002\files_.
+   Workspaces| A semi-colon delimited list of workspaces to migrate, such as _580162;1580184;1580194_.
+  
+  1. After the setup completes, verify that the following scripts have been added to the top-level folder:
+     * Migrate.ps1
+     * Report.ps1
+     * Sync.ps1
+  
+     For information about running the scripts, see [Common workflows using PowerShell commands](#common-workflows-using-powershell-commands).
+ 1. To migrate another set of workspaces, repeat steps 2 through 7. 
+        
 ## Common workflows using PowerShell commands
+You can use the PowerShell scripts provided with the File Migration CLI to synchronize data, migrate files, and generate reports. This section provides instructions for running the PowerShell command.
 
-**_TBD_** Add PowerShell command instructions
+### Synchronizing a source instance with a local database
+TBD
+
+### Migrating native files
+TBD
+
+### Running reports
+
+TBD
+
 
 ## Command-line reference
 
@@ -102,7 +148,7 @@ When you execute the sync command, you must authenticate to the source, such as 
     The following example illustrates how to use this login type in a command:
 
     ``` 
-   /command:sync /sqlinstance:"SomeInstance.mycompany.corp" /sqlpwd:"P@ssw0rd@1" /sqluser:"sa" /url:"https://hostname.mycompany.corp" /login+ /enforcessl- /targetpath:"\\files\T005\FTA\ScottP\DataMigration" /sqlintegrated- /workspaces:"1027428"
+   /command:sync /sqlinstance:"sqlinstance.mycompany.corp" /sqlpwd:"P@ssw0rd@1" /sqluser:"sa" /url:"https://hostname.mycompany.corp" /login+ /enforcessl- /targetpath:"\\files\T005\FTA\ScottP\DataMigration" /sqlintegrated- /workspaces:"1027428"
     ``` 
 
 * **Integrated login for SQL Server** - You can use integrated login to authenticate to the SQL Server by setting the /sqlintegrated parameter to True. In this case, you don't need to provide a SQL Server username and password.
@@ -116,7 +162,7 @@ When you execute the sync command, you must authenticate to the source, such as 
     The following example illustrates how to use this login type in a command:
 
     ```
-    /command:sync /sqlinstance:"SomeInstance.mycompany.corp" /url:"https://hostname.mycompany.corp" /login+ /enforcessl- /targetpath:"\\files\T005\FTA\ScottP\DataMigration" /sqlintegrated+ /workspaces:"1027428"
+    /command:sync /sqlinstance:"sqlinstance.mycompany.corp" /url:"https://hostname.mycompany.corp" /login+ /enforcessl- /targetpath:"\\files\T005\FTA\ScottP\DataMigration" /sqlintegrated+ /workspaces:"1027428"
     ```
 <details><summary>View parameter descriptions for source login</summary>
 
@@ -213,7 +259,7 @@ Relativity.Migration.Console.exe /command:sync /sqlinstance:<"Value"> {/sqluser:
 The following example will setup the initial local master/workspace databases or perform local database updates for active workspaces.
 
 ``` 
-Relativity.Migration.Console.exe /command:sync /sqlinstance:"SomeInstance.mycompany.corp" /sqlpwd:"SomePassword!" /sqluser:"SomeUserName" /url:"https://hostname.mycompany.corp" /login+ /oktaforce+ /targetpath:"\\files\SomeFolder\Files" /sha1- /metadata- /skipinv- /skipnative-
+Relativity.Migration.Console.exe /command:sync /sqlinstance:"sqlinstance.mycompany.corp.mycompany.corp" /sqlpwd:"SomePassword!" /sqluser:"SomeUserName" /url:"https://hostname.mycompany.corp" /login+ /oktaforce+ /targetpath:"\\files\SomeFolder\Files" /sha1- /metadata- /skipinv- /skipnative-
 ``` 
 
 #### Synchronizing specific workspaces
@@ -227,7 +273,7 @@ Relativity.Migration.Console.exe /command:sync /sqlinstance:<"Value"> {/sqluser:
 The following example is the same as above but limits the sync to specific workspaces. 
 
 ```
-Relativity.Migration.Console.exe /command:sync /sqlinstance:"SomeInstance.mycompany.corp" /sqlpwd:"SomePassword!" /sqluser:"SomeUserName" /url:"https://hostname.mycompany.corp" /login+ /oktaforce+ /targetpath:"files\SomeFolder\Files" /sha1- /metadata- /skipinv- /skipnative- /workspaces:"1032984;1624500"
+Relativity.Migration.Console.exe /command:sync /sqlinstance:"sqlinstance.mycompany.corp" /sqlpwd:"SomePassword!" /sqluser:"SomeUserName" /url:"https://hostname.mycompany.corp" /login+ /oktaforce+ /targetpath:"files\SomeFolder\Files" /sha1- /metadata- /skipinv- /skipnative- /workspaces:"1032984;1624500"
 ```
 
 <details><summary>View parameter descriptions</summary>
