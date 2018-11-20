@@ -19,7 +19,8 @@ This page contains the following information:
 
 * Make sure your environment meets these system requirements:
 
-   * **_TBD_** release for RelativityOne or Relativity
+   * Source instance - Version 9.0 or higher for Relativity
+   * Target instance - Bluestem (9.7) release for RelativityOne or Relativity
    * .NET 4.6.2
    * Visual C++ 2010 x86 Runtime
    * Intel 2Ghz (2-4 cores are recommended)
@@ -27,8 +28,8 @@ This page contains the following information:
 
 * Make sure that you have the following permissions:
 
-  * **_TBD_** Add required permissions
-  * **_TBD_** Add required permissions
+  * Source instance -  Add required permissions
+  * Target instance -  Add required permissions
 
 ## Setting up the File Migration CLI
 
@@ -41,7 +42,6 @@ Review the following best practices:
 * Run the File Migration CLI from your local machine. While you can run it from a fileshare, the File Migration CLI performs better when it runs from a local machine.
 
 * Create a new top-level folder for each set of workspaces that you want to migrate. The File Migration CLI builds separate databases for each migration when you create separate top-level folders for them. The SQLite databases persist the data for each run on your local machine. For example, you might create a series of top-level folders, such as Phase 1, Phase 2, and so on.
-
 
 Complete the following steps to set up PowerShell scripts for the File Migration CLI:
 
@@ -64,13 +64,25 @@ Complete the following steps to set up PowerShell scripts for the File Migration
    Target path| The UNC path for the destination fileshare, such as _\\\files\T002\files_.
    Workspaces| A semi-colon delimited list of workspaces to migrate, such as _580162;1580184;1580194_.
   
-  1. After the setup completes, verify that the following scripts have been added to the top-level folder:
+1. After the setup completes, verify that the following scripts have been added to the top-level folder:
      * Migrate.ps1
      * Report.ps1
      * Sync.ps1
   
      For information about running the scripts, see [Common workflows using PowerShell commands](#common-workflows-using-powershell-commands).
- 1. To migrate another set of workspaces, repeat steps 2 through 7. 
+
+1. If you are using integrated authentication, continue to step 2. If you are using SQL authentication, complete these steps:
+
+     * Navigate to the **Sync.ps1** file in your top-level folder.
+     * Open it with a text editor and add your SQL username and password to the following fields:
+    
+       ```
+       $sql_username = ""
+       $sql_password = "" 
+       ```
+     * Save your changes to the file.
+
+1. To setup another set of workspaces, repeat steps 2 through 8. 
         
 ## Common workflows using PowerShell commands
 You can use the PowerShell scripts provided with the File Migration CLI to synchronize data, migrate files, and generate reports. This section provides instructions for running the PowerShell command.
@@ -81,26 +93,24 @@ Before performing a migration, you must build local databases that store the met
 
 Use the following steps to synchronize your data:
 
-1. If you are using integrated authentication, continue to step 2. If you are using SQL authentication, complete these steps:
-
-   * Navigate to the **Sync.ps1** file in your top-level folder.
-   * Open it with a text editor and add your SQL username and password to the following fields:
+1. In the top level folder, right-click on the **Sync.ps1** script, and select **Run with PowerShell**.
+1. After the scripted runs, verify that the following items were created:
     
-     ```
-     $sql_username = ""
-     $sql_password = "" 
-     ```
-   * Save your changes to the file.
+     * LocalDB folder 
+     * An SQLite database for each of the specified workspaces exists in folder
 
- 1. In the top level folder, right-click on the **Sync.ps1** script, and select **Run with PowerShell**.
- 1. After the scripted runs, verify that the following items were created:
-    
-    * LocalDB folder 
-    * An SQLite database for each of the specified workspaces exists in folder
+### Running reports
+
+You can generate a report containing information about the progress of each workspace. Additionally, you can use it to verify that the workspaces were actually migrated as expected. For more information, see [Data flow overview](#data-flow-overview).
+
+Use the following steps to generate a report:
+
+1. In the top level folder, right-click on the **Report.ps1** script, and select **Run with PowerShell**.
+1. Review the report displayed in the console window.
 
 ### Migrating native files
 
-You can migrate natives files to your target Relativity instance after you have run the sync job. 
+You can migrate natives files to your target Relativity instance after you have run the sync job. For more information, see [Data flow overview](#data-flow-overview).
 
 **Note:** Don't attempt to run a migration job unless you have already run the Sync.ps1 script, and verified that it completed successfully. See [Synchronizing a source instance with a local database](#synchronizing-a-source-instance-with-a-local-database).
 
@@ -109,14 +119,6 @@ Use the following steps to migrate native files:
 1. In the top level folder, right-click on the **Migrate.ps1** script, and select **Run with PowerShell**.
 2. Monitor the migration progress to ensure that all files transfer successfully.
 
-### Running reports
-
-You can generate a report containing information about the progress of each workspace. Additionally, you can use it to verify that the workspaces were actually migrated as expected. 
-
-Use the following steps to generate a report:
-
-1. In the top level folder, right-click on the **Report.ps1** script, and select **Run with PowerShell**.
-1. Review the report displayed in the console window.
 
 ## Command-line reference
 
@@ -165,7 +167,7 @@ The File Migration CLI uses the same syntax followed by other Microsoft-based CL
 
 The File Migration CLI provides parameters used for authenticating to the source instance and the target instance.
 
-<details><summary>Authentication - source instance</summary>
+<details><summary>Source instance - SQL authentication</summary>
 
 When you execute the sync command, you must authenticate to the source, such as an SQL Server. The following options are available for authenticating to a source:
 
@@ -180,7 +182,7 @@ When you execute the sync command, you must authenticate to the source, such as 
     The following example illustrates how to use this login type in a command:
 
     ``` 
-   /command:sync /sqlinstance:"sqlinstance.mycompany.corp" /sqlpwd:"P@ssw0rd@1" /sqluser:"sa" /url:"https://hostname.mycompany.corp" /login+ /enforcessl- /targetpath:"\\files\T005\FTA\ScottP\DataMigration" /sqlintegrated- /workspaces:"1027428"
+   /command:sync /sqlinstance:"sqlinstance.mycompany.corp" /sqlpwd:"P@ssw0rd@1" /sqluser:"sa" /url:"https://hostname.mycompany.corp" /login+ /enforcessl- /targetpath:"\\files\SomeFolder\Files" /sqlintegrated- /workspaces:"1027428"
     ``` 
 
 * **Integrated login for SQL Server** - You can use integrated login to authenticate to the SQL Server by setting the /sqlintegrated parameter to True. In this case, you don't need to provide a username and password for the SQL Server.
@@ -194,7 +196,7 @@ When you execute the sync command, you must authenticate to the source, such as 
     The following example illustrates how to use this login type in a command:
 
     ```
-    /command:sync /sqlinstance:"sqlinstance.mycompany.corp" /url:"https://hostname.mycompany.corp" /login+ /enforcessl- /targetpath:"\\files\T005\FTA\ScottP\DataMigration" /sqlintegrated+ /workspaces:"1027428"
+    /command:sync /sqlinstance:"sqlinstance.mycompany.corp" /url:"https://hostname.mycompany.corp" /login+ /enforcessl- /targetpath:"\\files\SomeFolder\Files" /sqlintegrated+ /workspaces:"1027428"
     ```
 ### Parameter descriptions for source login
 
@@ -213,7 +215,7 @@ Parameter|Description
 
 <br>
 
-<details><summary>Authentication - target instance</summary>
+<details><summary>Target instance - Relativity authentication</summary>
 
 You must provide credentials for authentication, when you make certain commands through the File Migration CLI to a Relativity or RelativityOne target environment. 
 
@@ -276,12 +278,11 @@ Parameter|Description
 
 </details>
 
-
 ### Synchronizing workspaces
 
 The sync command builds local databases that store the metadata for the natives files in the source instance. You must run this command before you attempt to migrate any native files. 
 
-After the File Migration CLI builds the local databases, you can use the sync command to update them when changes have occurred in the source instance. You have the option to sync all the workspace databases from the source, or a specific group of them.
+After the File Migration CLI builds the local databases, you can use the sync command to update them when changes have occurred in the source instance. You have the option to sync all the workspace databases from the source, or a specific group of them. For more information, see [Data flow overview](#data-flow-overview).
 
 #### Synchronizing local master and workspace databases
 
@@ -308,7 +309,7 @@ Relativity.Migration.Console.exe /command:sync /sqlinstance:<"Value"> {/sqluser:
 The following example illustrate the command for synchronizing to a specific group of workspaces:
 
 ```
-Relativity.Migration.Console.exe /command:sync /sqlinstance:"sqlinstance.mycompany.corp" /sqlpwd:"SomePassword!" /sqluser:"SomeUserName" /url:"https://hostname.mycompany.corp" /login+ /oktaforce+ /targetpath:"files\SomeFolder\Files" /sha1- /metadata- /skipinv- /skipnative- /workspaces:"1032984;1624500"
+Relativity.Migration.Console.exe /command:sync /sqlinstance:"sqlinstance.mycompany.corp" /sqlpwd:"SomePassword!" /sqluser:"SomeUserName" /url:"https://hostname.mycompany.corp" /login+ /oktaforce+ /targetpath:"\\files\SomeFolder\Files" /sha1- /metadata- /skipinv- /skipnative- /workspaces:"1032984;1624500"
 ```
 
 <details><summary>View parameter descriptions</summary>
@@ -331,9 +332,29 @@ Parameter|Description
 
 </details>
 
+### Generating reports
+
+When generating a report through the command-line, you can use additional filter options, such as the /jobstatus parameter. For example, you can a run a report on only completed or in progress jobs. For more information, see [Data flow overview](#data-flow-overview).
+
+The following example generates a basic migration report for the local database:
+
+``` 
+Relativity.Migration.Console.exe /command:report
+``` 
+
+<details><summary>View parameter descriptions</summary>
+
+The following table describes each of the parameters used in a report command. For more parameters, see [Commands](#commands).
+
+Parameter|Description
+--------------|--------------
+/jobstatus:{value}|Indicates the job status filter applied to certain migration commands. For example, to run a report on completed jobs, you would set this parameter to Completed when executing the report command. Supported values include: <ul><li>None</li><li>InProgress - indicates that the file migration hasn't yet completed.</li><li>Completed - indicates that the file migration has finished. </li><li>Skipped - indicates there wasn't any files to migrate.</li></ul> 
+
+</details>
+
 ### Migrating native files 
 
-Before you can migrate natives files through the command-line, you must run the sync command, and verify that it completed successfully. You need to set the authentication parameters required by the target instance for the migration job.
+Before you can migrate natives files through the command-line, you must run the sync command, and verify that it completed successfully. You need to set the authentication parameters required by the target instance for the migration job. For more information, see [Data flow overview](#data-flow-overview).
 
 Migrating native files has the following general command format:
 
@@ -364,93 +385,6 @@ Parameter|Description
 /subjob:{value}|The subjob filter applied to certain migration commands. For example, if you set the value of this parameter to InvariantDbStorage, and executed the migrate command, only workspaces with files in the Invariant DB Storage table are migrated. Supported values include: <ul><li>None</li><li>WorkspaceDbFiles - TBD</li><li>InvariantDbStorage - TBD</li><li>InvariantDbPages - TBD</li><li>InvariantTemporaryNative - TBD</li></ul>
 /targetpath:{value}|The target path used for synching databases or workspaces, or for migrating native files. For more information, see [UNC file paths](#unc-file-paths) and [Remote server paths](#remote-server-paths). <br>**Note:** You can optionally use the /fileshare parameter instead of the /targetpath.
 /workspaces:{value}|The artifact IDs for a list of Relativity workspace that you want to filter on when running a specific command. This parameter supports the following syntax:<ul><li>A list of semicolon delimited artifact IDs, such as _1171671;1171672;1171673_</li><li>The start and end of range separated by a dash, such as _1171671-1171673_ </li></ul>
-
-</details>
-
-### Generating reports
-
-When generating a report through the command-line, you can use additional filter options, such as the /jobstatus parameter. For example, you can a run a report on only completed or in progress jobs.
-
-The following example generates a basic migration report for the local database:
-
-``` 
-Relativity.Migration.Console.exe /command:report
-``` 
-
-<details><summary>View parameter descriptions</summary>
-
-The following table describes each of the parameters used in a report command. For more parameters, see [Commands](#commands).
-
-Parameter|Description
---------------|--------------
-/jobstatus:{value}|Indicates the job status filter applied to certain migration commands. For example, to run a report on completed jobs, you would set this parameter to Completed when executing the report command. Supported values include: <ul><li>None</li><li>InProgress - indicates that the file migration hasn't yet completed.</li><li>Completed - indicates that the file migration has finished. </li><li>Skipped - indicates there wasn't any files to migrate.</li></ul> 
-
-</details>
-
-### Generating workspace CSV files
-
-**_TBD_** Add introduction
-
-Generating CSV files has the following general command format:
-
-``` 
-Relativity.Migration.Console.exe /csv workspaces:<"Value">
-``` 
-
-The following example generates CSV files for the specified workspaces. This command is optional to provide operators an ability to "hand tune" CSV files when a workspace migration fails due to unsupported migration rules or logic.
-
-``` 
-Relativity.Migration.Console.exe /csv workspaces:"1171671;1171672;1171673"
-``` 
-
-<details><summary>View parameter descriptions</summary>
-
-The following table describes each of the parameters used in a migration command. For more parameters, see [Commands](#commands).
-
-Parameter|Description
----------|--------------
-/workspaces:{value}|The artifact IDs for a list of Relativity workspace that you want to filter on when running a specific command. This parameter supports the following syntax:<ul><li>A list of semicolon delimited Artifact IDs, such as _1171671;1171672;1171673_</li><li>The start and end of range separated by a dash, such as _1171671-1171673_ </li></ul>
-
-</details>
-
-
-### TAPI client configuration values
-
-**_TBD_** Add more information
-
-#### Displaying configuration values
-
-**_TBD_** Add more information
-
-This command is useful to view all available TAPI client configuration keys, descriptions, and default values.
-
-``` 
-Relativity.Migration.Console.exe /command:configdocs
-``` 
-
-#### Setting configuration values
-
-**_TBD_** Add more information
-
-Setting configuration values has the following general command format:
-
-``` 
-TBD
-``` 
-
-Any of the supported TAPI client configuration settings can be set by assigning name value pairs to the configuration parameter. The following example forces the Aspera client and sets the target data rate to 250 Mbps.
-
-``` 
-Relativity.Migration.Console.exe /configuration:"client=Aspera;target-data-rate-mbps=250"
-``` 
-
-<details><summary>View parameter descriptions</summary>
-
-The following table describes each of the parameters used in a migration command. For more parameters, see [Commands](#commands) and [Authentication](#authentication).
-
-Parameter|Description
---------------|--------------
-/configuration|A semi-colon delimited list of name-value pairs for items, such as max-target data rate, pre-calculate, and so on. 
 
 </details>
 
@@ -513,6 +447,46 @@ For RelativityOne, all Aspera servers are configured at the root of each support
   /Files/EDDS1027541/Temp
   ```
 </details>
+
+### Configuration settings
+
+<details><summary>View configuration settings</summary>
+The File Migration CLI supports several commands that you can use to set or view client configuration settings.
+
+### Set client configuration values
+To update client configuration settings, assign name-value pairs to the /configuration parameter. The following table lists the most commonly used configuration settings:
+
+Key                           |Description
+------------------------------|------------------
+client|The migration client used for a command. The File Migration CLI automatically chooses the best-fit client, but you can also manually set this configuration value to Aspera, Fileshare, HTTP, or other values. 
+file-not-found-errors-disabled|Enables or disables the treatment of missing files as warnings or errors. The default value is False.
+file-not-found-errors-retry|Enables or disables retrying missing file errors. The default value is True.
+http-timeout-seconds|The timeout, in seconds, for an HTTP or REST service call. The default value is 300.
+max-http-retry-attempts|The maximum number of retry attempts for an HTTP or REST service call. The default value is 5.
+max-job-retry-attempts|The maximum number of job retry attempts. The default value is 3.
+min-data-rate-mbps|The minimum data rate in Mbps unit. This option isn't supported by all clients. It acts as a hint to clients that support configurable data rates. The default value is 0.
+overwrite-files|Enables or disables overwriting files at the target path. The job fails when this option is disabled, and the target paths already exist. The default value is True.
+permission-errors-retry|Enables or disables retrying file migrations that fail due to permission or file access errors. The default value is False.
+preserve-dates|Enables or disables preserving file created, modified, and access times. The default value is True.
+target-data-rate-mbps|The target data rate in Mbps unit. This option isn't supported by all clients. It acts as a hint to clients that support configurable data rates. The default value is 100.
+transfer-empty-directories|Enables or disables transferring empty directories. The default value is False.
+
+In this example, the command forces the Aspera client and sets the target data rate to 250 Mbps.
+
+```
+Relativity.Migration.Console.exe /configuration:"client=Aspera;target-data-rate-mbps=250"
+```
+**Note:** If the name-value pair itself contains a semi-colon, then replace it with the %3B encoded character. For example, the _azure-storage-account-connection-string_ contains semi-colons to separate each setting within a single connection string parameter.
+
+### Display a list of all client configuration keys
+You can display a list of the all client configuration keys, descriptions, and default values by executing the following command:
+
+```
+Relativity.Migration.Console.exe /command:configdocs
+```
+
+</details>
+
 
 ### Commands
 
@@ -588,8 +562,8 @@ The rolling file sink stores logs in _rolling_ log files in the user profile tem
 ### APM metrics
 
 <details><summary>View APM metrics</summary>
-
-The File Migration CLI collects APM metrics **_for TBD commands_**. This functionality is enabled by default. For information about the metrics that are collected, see the [README.md file](https://github.com/relativitydev/transfer-api-samples/blob/master/README.md) for the TAPI.
+ 
+The File Migration CLI collects APM metrics for only the migrate command. This functionality is enabled by default. For information about the metrics that are collected, see the [README.md file](https://github.com/relativitydev/transfer-api-samples/blob/master/README.md) for the TAPI.
 
 The following command performs a TBD and collects APM metrics. It includes the enabled /apm+ parameter:
 
