@@ -111,7 +111,7 @@ Use the following steps to migrate native files:
 
 ### Running reports
 
-You can print a report containing information about the progress of each workspace. Additionally, you can use it to verify that the workspaces were actually migrated as expected. 
+You can generate a report containing information about the progress of each workspace. Additionally, you can use it to verify that the workspaces were actually migrated as expected. 
 
 Use the following steps to generate a report:
 
@@ -120,9 +120,9 @@ Use the following steps to generate a report:
 
 ## Command-line reference
 
-**_TBD_** Add introduction
+You can optionally run all commands supported by the File Migration CLI through a command-line interface rather than with PowerShell scripts. The File Migration CLI uses standard CLI commands and parameters, which provide additional options for fine-tuning how the supported operations are run. For example, you can use specific parameters to set the number of files or bytes per batch when running a migration job.
 
-##  Command-line syntax
+###  Command-line syntax
 
 Review the following table to familiarize yourself with the command-line syntax used in this documentation. Each section includes a generic representation of a command with required and optional parameters, as well as an example using actual values. The following table outlines the notation used in the generic commands:
 
@@ -161,9 +161,9 @@ The File Migration CLI uses the same syntax followed by other Microsoft-based CL
 
 </details>
 
-## Authentication
+### Authentication
 
-**_TBD_** Add introduction.
+The File Migration CLI provides parameters used for authenticating to the source instance and the target instance.
 
 <details><summary>Authentication - source instance</summary>
 
@@ -183,7 +183,7 @@ When you execute the sync command, you must authenticate to the source, such as 
    /command:sync /sqlinstance:"sqlinstance.mycompany.corp" /sqlpwd:"P@ssw0rd@1" /sqluser:"sa" /url:"https://hostname.mycompany.corp" /login+ /enforcessl- /targetpath:"\\files\T005\FTA\ScottP\DataMigration" /sqlintegrated- /workspaces:"1027428"
     ``` 
 
-* **Integrated login for SQL Server** - You can use integrated login to authenticate to the SQL Server by setting the /sqlintegrated parameter to True. In this case, you don't need to provide a SQL Server username and password.
+* **Integrated login for SQL Server** - You can use integrated login to authenticate to the SQL Server by setting the /sqlintegrated parameter to True. In this case, you don't need to provide a username and password for the SQL Server.
 
      Integrated login for SQL Server has the following general command format:
 
@@ -198,7 +198,7 @@ When you execute the sync command, you must authenticate to the source, such as 
     ```
 ### Parameter descriptions for source login
 
-The following table describes each of the parameters used to log in to a source instance. For more parameters, see [Commands](#commands) and [Authentication - target instance](#authentication-target-instance).
+The following table describes each of the parameters used to log in to a source instance. For more parameters, see [Commands](#commands).
 
 Parameter|Description
 --------------|------------------
@@ -263,7 +263,7 @@ This list describes the methods available for authenticating to a target through
      
 ### Parameter descriptions for target login
 
-The following table describes each of the parameters used to log in to a target instance. For more parameters, see [Commands](#commands) and [Authentication - source instance](#authentication-source-instance).
+The following table describes each of the parameters used to log in to a target instance. For more parameters, see [Commands](#commands).
 
 Parameter|Description
 --------------|------------------
@@ -279,7 +279,9 @@ Parameter|Description
 
 ### Synchronizing workspaces
 
-**_TBD_** Add introduction
+The sync command builds local databases that store the metadata for the natives files in the source instance. You must run this command before you attempt to migrate any native files. 
+
+After the File Migration CLI builds the local databases, you can use the sync command to update them when changes have occurred in the source instance. You have the option to sync all the workspace databases from the source, or a specific group of them.
 
 #### Synchronizing local master and workspace databases
 
@@ -289,21 +291,21 @@ Setting up or updating local master or workspace databases has the following gen
 Relativity.Migration.Console.exe /command:sync /sqlinstance:<"Value"> {/sqluser:<"Value"> /sqlpwd:<"Value"> /login+ /oktaforce+ | /login+ /enforcessl- /sqlintegrated:+} /url:<"Value"> {/targetpath:<"Value">|/fileshare:<"Value">} /sha1:<+ | -> /metadata:<+ | ->  /skipinv:<+ | ->  /skipnative:<+ | -> 
 ``` 
 
-The following example will setup the initial local master/workspace databases or perform local database updates for active workspaces.
-
+The following example illustrates how to set up the local master and workspace databases for the first time. It can also be used to update the local databases for active workspaces.
+ 
 ``` 
 Relativity.Migration.Console.exe /command:sync /sqlinstance:"sqlinstance.mycompany.corp.mycompany.corp" /sqlpwd:"SomePassword!" /sqluser:"SomeUserName" /url:"https://hostname.mycompany.corp" /login+ /oktaforce+ /targetpath:"\\files\SomeFolder\Files" /sha1- /metadata- /skipinv- /skipnative-
 ``` 
 
-#### Synchronizing specific workspaces
+#### Synchronizing specific workspace databases
 
-Synching a specific group of workspace databases has the following general command format:
+Synchronizing a specific group of workspace databases has the following general command format:
 
 ``` 
 Relativity.Migration.Console.exe /command:sync /sqlinstance:<"Value"> {/sqluser:<"Value"> /sqlpwd:<"Value"> /login+ /oktaforce+ | /login+ /enforcessl- /sqlintegrated:+} /url:<"Value"> {/targetpath:<"Value">|/fileshare:<"Value">} /sha1:<+ | -> /metadata:<+ | ->  /skipinv:<+ | ->  /skipnative:<+ | -> /workspaces:<"Value">
 ```
 
-The following example is the same as above but limits the sync to specific workspaces. 
+The following example illustrate the command for synchronizing to a specific group of workspaces:
 
 ```
 Relativity.Migration.Console.exe /command:sync /sqlinstance:"sqlinstance.mycompany.corp" /sqlpwd:"SomePassword!" /sqluser:"SomeUserName" /url:"https://hostname.mycompany.corp" /login+ /oktaforce+ /targetpath:"files\SomeFolder\Files" /sha1- /metadata- /skipinv- /skipnative- /workspaces:"1032984;1624500"
@@ -329,10 +331,9 @@ Parameter|Description
 
 </details>
 
+### Migrating native files 
 
-### Migrating workspaces
-
-**_TBD_** Add introduction
+Before you can migrate natives files through the command-line, you must run the sync command, and verify that it completed successfully. You need to set the authentication parameters required by the target instance for the migration job.
 
 Migrating native files has the following general command format:
 
@@ -340,7 +341,7 @@ Migrating native files has the following general command format:
 Relativity.Migration.Console.exe /command:migrate /url:<"Value"> {/username:<"Value"> /password:<"Value"> | /login+ | /login+ /oktaforce+} /workspaces:<"Value"> 
 ```
 
-The following example migrates all native files contained within the specified workspaces to the target R1 instance.
+The following example illustrates how to migrate all native files in the specified workspaces to the target RelativityOne instance:
 
 ``` 
 Relativity.Migration.Console.exe /command:migrate /url:"https://hostname.mycompany.corp" /login+ /oktaforce+ /workspaces:"1171671;1171672;1171673"
@@ -360,7 +361,7 @@ Parameter|Description
 /skipinv{+\|-}|Enables or disables skipping Invariant files when executing the sync or migrate commands. <br>**Note:** The default value is False.
 /skipnative{+\|-}|Enables or disables skipping native files when executing the sync or migrate commands. <br>**Note:** The default value is False.
 /skiplongpaths{+\|-}|Enables or disables skipping long paths found during search path enumeration. When this parameter is set to False, the enumeration fails if a path exceeds the maximum length defined by the File Migration CLI. <br>**Note:** The default value is False.
-/subjob:{value}|The subjob filter applied to certain migration commands. For example, if you set the value of this parameter to InvariantDbStorage, and executed the migrate command, only workspaces with files in the Invariant DB Storage table are migrated. Supported values include: <ul><li>None</li><li>WorkspaceDbFiles</li><li>InvariantDbStorage</li><li>InvariantDbPages</li><li>InvariantTemporaryNative</li></ul>
+/subjob:{value}|The subjob filter applied to certain migration commands. For example, if you set the value of this parameter to InvariantDbStorage, and executed the migrate command, only workspaces with files in the Invariant DB Storage table are migrated. Supported values include: <ul><li>None</li><li>WorkspaceDbFiles - TBD</li><li>InvariantDbStorage - TBD</li><li>InvariantDbPages - TBD</li><li>InvariantTemporaryNative - TBD</li></ul>
 /targetpath:{value}|The target path used for synching databases or workspaces, or for migrating native files. For more information, see [UNC file paths](#unc-file-paths) and [Remote server paths](#remote-server-paths). <br>**Note:** You can optionally use the /fileshare parameter instead of the /targetpath.
 /workspaces:{value}|The artifact IDs for a list of Relativity workspace that you want to filter on when running a specific command. This parameter supports the following syntax:<ul><li>A list of semicolon delimited artifact IDs, such as _1171671;1171672;1171673_</li><li>The start and end of range separated by a dash, such as _1171671-1171673_ </li></ul>
 
@@ -368,7 +369,7 @@ Parameter|Description
 
 ### Generating reports
 
-**_TBD_** Add introduction
+When generating a report through the command-line, you can use additional filter options, such as the /jobstatus parameter. For example, you can a run a report on only completed or in progress jobs.
 
 The following example generates a basic migration report for the local database:
 
@@ -382,7 +383,7 @@ The following table describes each of the parameters used in a report command. F
 
 Parameter|Description
 --------------|--------------
-/jobstatus:{value}|Indicates the job status filter applied to certain migration commands. For example, to run a report on completed jobs, you would set this parameter to Completed when executing the report command. Supported values include: <ul><li>None</li><li>InProgress</li><li>Completed</li><li>Skipped</li></ul> 
+/jobstatus:{value}|Indicates the job status filter applied to certain migration commands. For example, to run a report on completed jobs, you would set this parameter to Completed when executing the report command. Supported values include: <ul><li>None</li><li>InProgress - indicates that the file migration hasn't yet completed.</li><li>Completed - indicates that the file migration has finished. </li><li>Skipped - indicates there wasn't any files to migrate.</li></ul> 
 
 </details>
 
