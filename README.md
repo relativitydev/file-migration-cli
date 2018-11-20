@@ -77,7 +77,7 @@ You can use the PowerShell scripts provided with the File Migration CLI to synch
 
 ### Synchronizing a source instance with a local database
 
-Before performing a migration, you must build local databases that store the metadata for the natives files in the source instance. The File Migration CLI builds these databases when you run a synchronization job for the first time. When you run subsequent jobs, the synch command updates your local databases with any changes made to the files in the source instance and continues to persist this information. For more information, see [Data flow overview](#data-flow-overview).
+Before performing a migration, you must build local databases that store the metadata for the natives files in the source instance. The File Migration CLI builds these databases when you run a sync job for the first time. When you run subsequent jobs, the synch command updates your local databases with any changes made to the files in the source instance and continues to persist this information. For more information, see [Data flow overview](#data-flow-overview).
 
 Use the following steps to synchronize your data:
 
@@ -92,19 +92,31 @@ Use the following steps to synchronize your data:
      ```
    * Save your changes to the file.
 
- 1. Right-click on the script, and select **Run with PowerShell**.
+ 1. In the top level folder, right-click on the **Sync.ps1** script, and select **Run with PowerShell**.
  1. After the scripted runs, verify that the following items were created:
     
     * LocalDB folder 
     * An SQLite database for each of the specified workspaces exists in folder
 
 ### Migrating native files
-TBD
+
+You can migrate natives files to your target Relativity instance after you have run the sync job. 
+
+**Note:** Don't attempt to run a migration job unless you have already run the Sync.ps1 script, and verified that it completed successfully. See [Synchronizing a source instance with a local database](#synchronizing-a-source-instance-with-a-local-database).
+
+Use the following steps to migrate native files:
+
+1. In the top level folder, right-click on the **Migrate.ps1** script, and select **Run with PowerShell**.
+2. Monitor the migration progress to ensure that all files transfer successfully.
 
 ### Running reports
 
-TBD
+You can print a report containing information about the progress of each workspace. Additionally, you can use it to verify that the workspaces were actually migrated as expected. 
 
+Use the following steps to generate a report:
+
+1. In the top level folder, right-click on the **Report.ps1** script, and select **Run with PowerShell**.
+1. Review the report displayed in the console window.
 
 ## Command-line reference
 
@@ -153,7 +165,7 @@ The File Migration CLI uses the same syntax followed by other Microsoft-based CL
 
 **_TBD_** Add introduction.
 
-### Authentication - source instance
+<details><summary>Authentication - source instance</summary>
 
 When you execute the sync command, you must authenticate to the source, such as an SQL Server. The following options are available for authenticating to a source:
 
@@ -184,7 +196,7 @@ When you execute the sync command, you must authenticate to the source, such as 
     ```
     /command:sync /sqlinstance:"sqlinstance.mycompany.corp" /url:"https://hostname.mycompany.corp" /login+ /enforcessl- /targetpath:"\\files\T005\FTA\ScottP\DataMigration" /sqlintegrated+ /workspaces:"1027428"
     ```
-<details><summary>View parameter descriptions for source login</summary>
+### Parameter descriptions for source login
 
 The following table describes each of the parameters used to log in to a source instance. For more parameters, see [Commands](#commands) and [Authentication - target instance](#authentication-target-instance).
 
@@ -199,8 +211,9 @@ Parameter|Description
 
 </details>
 
+<br>
 
-### Authentication - target instance
+<details><summary>Authentication - target instance</summary>
 
 You must provide credentials for authentication, when you make certain commands through the File Migration CLI to a Relativity or RelativityOne target environment. 
 
@@ -248,7 +261,7 @@ This list describes the methods available for authenticating to a target through
     Relativity.Migration.Console.exe /command:migrate /url:"https://hostname.mycompany.corp" /login+ /oktaforce+ /workspaces:"1171671;1171672;1171673"
      ```
      
-<details><summary>View parameter descriptions for target login</summary>
+### Parameter descriptions for target login
 
 The following table describes each of the parameters used to log in to a target instance. For more parameters, see [Commands](#commands) and [Authentication - source instance](#authentication-source-instance).
 
