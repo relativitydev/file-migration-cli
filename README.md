@@ -76,7 +76,27 @@ Complete the following steps to set up PowerShell scripts for the File Migration
 You can use the PowerShell scripts provided with the File Migration CLI to synchronize data, migrate files, and generate reports. This section provides instructions for running the PowerShell command.
 
 ### Synchronizing a source instance with a local database
-TBD
+
+Before performing a migration, you must build local databases that store the metadata for the natives files in the source instance. The File Migration CLI builds these databases when you run a synchronization job for the first time. When you run subsequent jobs, the synch command updates your local databases with any changes made to the files in the source instance and continues to persist this information. For more information, see [Data flow overview](#data-flow-overview).
+
+Use the following steps to synchronize your data:
+
+1. If you are using integrated authentication, continue to step 2. If you are using SQL authentication, complete these steps:
+
+   * Navigate to the **Sync.ps1** file in your top-level folder.
+   * Open it with a text editor and add your SQL username and password to the following fields:
+    
+     ```
+     $sql_username = ""
+     $sql_password = "" 
+     ```
+   * Save your changes to the file.
+
+ 1. Right-click on the script, and select **Run with PowerShell**.
+ 1. After the scripted runs, verify that the following items were created:
+    
+    * LocalDB folder 
+    * An SQLite database for each of the specified workspaces exists in folder
 
 ### Migrating native files
 TBD
