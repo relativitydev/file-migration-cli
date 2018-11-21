@@ -83,7 +83,7 @@ Complete the following steps to set up PowerShell scripts for the File Migration
      * Save your changes to the file.
 
 1. To setup another set of workspaces, repeat steps 2 through 8. 
-        
+
 ## Common workflows using PowerShell commands
 You can use the PowerShell scripts provided with the File Migration CLI to synchronize data, migrate files, and generate reports. This section provides instructions for running the PowerShell command.
 
@@ -228,7 +228,7 @@ This list describes the methods available for authenticating to a target through
      Username and password login has the following general command format:
 
      ```
-     Relativity.Migration.Console.exe /command:<YourCommand> [ParametersForCommand] /url:<"Value">  /username:"email@company.com" /password:"SomePassword!"
+     Relativity.Migration.Console.exe /command:<YourCommand> [ParametersForCommand] /url:<"Value"> /username:"email@company.com" /password:"SomePassword!"
      ```
 
     The following example illustrates how to use this login type in a command:
@@ -247,7 +247,7 @@ This list describes the methods available for authenticating to a target through
     The following example illustrates how to use this login type in a command:
 
     ```
-    Relativity.Migration.Console.exe /command:migrate /url:"https://hostname.mycompany.corp" /login+  /workspaces:"1171671;1171672;1171673"
+    Relativity.Migration.Console.exe /command:migrate /url:"https://hostname.mycompany.corp" /login+ /workspaces:"1171671;1171672;1171673"
     ```
 
 * **Interactive login with Okta support** - Depending on the configuration of your Relativity environment, an Okta provider may be assigned to your user profile for authentication. For example, RelativityOne environments commonly require that you sign in with Okta.
@@ -289,7 +289,7 @@ After the File Migration CLI builds the local databases, you can use the sync co
 Setting up or updating local master or workspace databases has the following general command format:
 
 ``` 
-Relativity.Migration.Console.exe /command:sync /sqlinstance:<"Value"> {/sqluser:<"Value"> /sqlpwd:<"Value"> /login+ /oktaforce+ | /login+ /enforcessl- /sqlintegrated:+} /url:<"Value"> {/targetpath:<"Value">|/fileshare:<"Value">} /sha1:<+ | -> /metadata:<+ | ->  /skipinv:<+ | ->  /skipnative:<+ | -> 
+Relativity.Migration.Console.exe /command:sync /sqlinstance:<"Value"> {/sqluser:<"Value"> /sqlpwd:<"Value"> /login+ /oktaforce+ | /login+ /enforcessl- /sqlintegrated:+} /url:<"Value"> {/targetpath:<"Value">|/fileshare:<"Value">} /sha1:<+ | -> /metadata:<+ | -> /skipinv:<+ | -> /skipnative:<+ | -> 
 ``` 
 
 The following example illustrates how to set up the local master and workspace databases for the first time. It can also be used to update the local databases for active workspaces.
@@ -303,7 +303,7 @@ Relativity.Migration.Console.exe /command:sync /sqlinstance:"sqlinstance.mycompa
 Synchronizing a specific group of workspace databases has the following general command format:
 
 ``` 
-Relativity.Migration.Console.exe /command:sync /sqlinstance:<"Value"> {/sqluser:<"Value"> /sqlpwd:<"Value"> /login+ /oktaforce+ | /login+ /enforcessl- /sqlintegrated:+} /url:<"Value"> {/targetpath:<"Value">|/fileshare:<"Value">} /sha1:<+ | -> /metadata:<+ | ->  /skipinv:<+ | ->  /skipnative:<+ | -> /workspaces:<"Value">
+Relativity.Migration.Console.exe /command:sync /sqlinstance:<"Value"> {/sqluser:<"Value"> /sqlpwd:<"Value"> /login+ /oktaforce+ | /login+ /enforcessl- /sqlintegrated:+} /url:<"Value"> {/targetpath:<"Value">|/fileshare:<"Value">} /sha1:<+ | -> /metadata:<+ | -> /skipinv:<+ | -> /skipnative:<+ | -> /workspaces:<"Value">
 ```
 
 The following example illustrate the command for synchronizing to a specific group of workspaces:
@@ -396,7 +396,7 @@ This section includes the following additional information about the File Migrat
 
 <details><summary>View remote server paths</summary>
 
-The  File Migration CLI supports both absolute and relative paths. The File Migration CLI leverages path resolvers used by the underlying TAPI architecture to adapt paths from one format to another. It supports the following path architecture:
+The File Migration CLI supports both absolute and relative paths. The File Migration CLI leverages path resolvers used by the underlying TAPI architecture to adapt paths from one format to another. It supports the following path architecture:
 
  * **On-premises Relativity** - supports UNC paths. For more information, see [Absolute paths used by on-premises Relativity](#absolute-paths-used-by-on-premises-Relativity).
 * **RelativityOne** - supports only UNIX-style relative paths, because it is deployed on Aspera. By default, the File Migration CLI can resolve UNC paths to relative paths for backwards compatibility. See [UNIX-style relative paths used by RelativityOne](#unix-style-relative-paths-used-by-RelativityOne).
