@@ -39,7 +39,7 @@ You can execute commands for File Migration CLI by running PowerShell scripts or
 
 Review the following best practices:
 
-* Run the File Migration CLI from your local machine. While you can run it from a fileshare, the File Migration CLI performs better when it runs from a local machine.
+* Run the File Migration CLI from your local machine. While you can run it from a file share, the File Migration CLI performs better when it runs from a local machine.
 
 * Create a new top-level folder for each set of workspaces that you want to migrate. The File Migration CLI builds separate databases for each migration when you create separate top-level folders for them. The SQLite databases persist the data for each run on your local machine. For example, you might create a series of top-level folders, such as Phase 1, Phase 2, and so on.
 
@@ -61,7 +61,7 @@ Complete the following steps to set up PowerShell scripts for the File Migration
    SQL authentication| **I** indicates integrated authentication, and **S** indicates SQL authentication. 
    Relativity SQL instance| The DNS name of your SQL instance, such as _sqlinstance.mycompany.corp_.
    Relativity URL| The web URL for your destination Relativity instance, such as _<span>https:/</span>/hostname.mycompany.corp_.
-   Target path| The UNC path for the destination fileshare, such as _\\\files\T002\files_.
+   Target path| The UNC path for the destination file share, such as _\\\files\T002\files_.
    Workspaces| A semi-colon delimited list of workspaces to migrate, such as _580162;1580184;1580194_.
   
 1. After the setup completes, verify that the following scripts have been added to the top-level folder:
@@ -409,7 +409,7 @@ An absolute UNC path is a fully qualified domain name (FQDN). The following abso
 ```
 
 ### UNIX-style relative paths used by RelativityOne 
-RelativityOne is deployed on Aspera, so it supports only UNIX-style relative paths. The following screen shot illustrates the root of a RelativityOne fileshare, when browsed through File Explorer:
+RelativityOne is deployed on Aspera, so it supports only UNIX-style relative paths. The following screen shot illustrates the root of a RelativityOne file share, when browsed through File Explorer:
 
 ![relativityonepaths](https://user-images.githubusercontent.com/43040844/45386621-66add880-b5d9-11e8-9aee-a1e2c8c485f3.png)
 
