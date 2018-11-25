@@ -56,14 +56,13 @@ Complete the following steps to set up PowerShell scripts for the File Migration
 1. Right-click on the script, and select **Run with PowerShell**.
 1. Enter the following information in the PowerShell console window:
 
-      Entry|Description
-   ------------|---------------
-   SQL authentication| **I** indicates integrated authentication, and **S** indicates SQL authentication. 
-   Relativity SQL instance| The DNS name of your SQL instance, such as _sqlinstance.mycompany.corp_.
-   Relativity URL| The web URL for your destination Relativity instance, such as _<span>https:/</span>/hostname.mycompany.corp_.
-   Target path| The UNC path for the destination file share, such as _\\\files\T002\files_.
-   Workspaces| A semi-colon delimited list of workspaces to migrate, such as _580162;1580184;1580194_.
-  
+     * Enter **Y** when asked if you want to continue.
+     * For the source instance, enter the SQL authentication as Integrated or SQL. For example, enter **I** for integrated or **S** for SQL authentication. See [Before you begin](#before-you-begin).
+     * Enter the domain name of the SQL instance. For example, it should have this general format: _sqlhost.domain.local_.
+     * For the target instance, enter the Relativity URL.
+     * Enter the path for the target file share. For example, it should have this general format: _\\\files\T002\files_.
+     * Enter a semi-colon delimited list of workspaces to migrate. For example, the list has this format: _1580162;1580184;1580194_.
+ 
 1. After the setup completes, verify that the following scripts have been added to the top-level folder:
      * Migrate.ps1
      * Report.ps1
@@ -71,7 +70,7 @@ Complete the following steps to set up PowerShell scripts for the File Migration
   
      For information about running the scripts, see [Common workflows using PowerShell commands](#common-workflows-using-powershell-commands).
 
-1. If you are using integrated authentication, continue to step 2. If you are using SQL authentication, complete these steps:
+1. If you are using SQL authentication, complete these steps:
 
      * Navigate to the **Sync.ps1** file in your top-level folder.
      * Open it with a text editor and add your SQL username and password to the following fields:
