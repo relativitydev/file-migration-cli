@@ -28,8 +28,15 @@ This page contains the following information:
 
 * Make sure that you have the following permissions:
 
-  * Source instance -  Add required permissions
-  * Target instance -  Add required permissions
+  * Source instance - You must have at least read-only permissions to all files in the source instance repository. These permissions are required to synchronize files in the source instance with the local databases built by the Migration CLI.
+  
+    Additionally, you must have read-only access to the following databases:
+
+     * EDDSDBO
+     * Invariant
+     * InvariantStore 
+
+  * Target instance - You must be a member of the System Administrators group in Relativity. These permissions are required to migrate native files to the fileshare for the target Relativity instance. For more information, see [System groups](https://help.relativity.com/9.6/Content/Relativity/Groups.htm#System) on the Relativity 9.6 Documentation site.
 
 ## Setting up the File Migration CLI
 
@@ -57,7 +64,7 @@ Complete the following steps to set up PowerShell scripts for the File Migration
 1. Enter the following information in the PowerShell console window:
 
      * Enter **Y** when asked if you want to continue.
-     * For the source instance, enter the SQL authentication as Integrated or SQL. For example, enter **I** for integrated or **S** for SQL authentication. See [Before you begin](#before-you-begin).
+     * For the source instance, enter the SQL authentication as Integrated or SQL. For example, enter **I** for Integrated authentication or **S** for SQL authentication. See [Before you begin](#before-you-begin).
      * Enter the domain name of the SQL instance. For example, it should have this general format: _sqlhost.domain.local_.
      * For the target instance, enter the Relativity URL.
      * Enter the path for the target file share. For example, it should have this general format: _\\\files\T002\files_.
