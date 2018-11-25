@@ -388,7 +388,7 @@ Parameter|Description
 /skipinv{+\|-}|Enables or disables skipping Invariant files when executing the sync or migrate commands. <br>**Note:** The default value is False.
 /skipnative{+\|-}|Enables or disables skipping native files when executing the sync or migrate commands. <br>**Note:** The default value is False.
 /skiplongpaths{+\|-}|Enables or disables skipping long paths found during search path enumeration. When this parameter is set to False, the enumeration fails if a path exceeds the maximum length defined by the File Migration CLI. <br>**Note:** The default value is False.
-/subjob:{value}|The subjob filter applied to certain migration commands. For example, if you set the value of this parameter to InvariantDbStorage, and executed the migrate command, only workspaces with files in the Invariant DB Storage table are migrated. Supported values include: <ul><li>None</li><li>WorkspaceDbFiles - TBD</li><li>InvariantDbStorage - TBD</li><li>InvariantDbPages - TBD</li><li>InvariantTemporaryNative - TBD</li></ul>
+/subjob:{value}|The subjob filter applied to certain migration commands. For example, if you set the value of this parameter to InvariantDbStorage, and executed the migrate command, only workspaces with files in the Invariant DB Storage table are migrated. Supported values include: <ul><li>None</li><li>WorkspaceDbFiles</li><li>InvariantDbStorage </li><li>InvariantDbPages</li><li>InvariantTemporaryNative</li></ul>
 /targetpath:{value}|The target path used for synching databases or workspaces, or for migrating native files. For more information, see [UNC file paths](#unc-file-paths) and [Remote server paths](#remote-server-paths). <br>**Note:** You can optionally use the /fileshare parameter instead of the /targetpath.
 /workspaces:{value}|The artifact IDs for a list of Relativity workspace that you want to filter on when running a specific command. This parameter supports the following syntax:<ul><li>A list of semicolon delimited artifact IDs, such as _1171671;1171672;1171673_</li><li>The start and end of range separated by a dash, such as _1171671-1171673_ </li></ul>
 
@@ -493,7 +493,6 @@ Relativity.Migration.Console.exe /command:configdocs
 
 </details>
 
-
 ### Commands
 
 <details><summary>View available commands</summary>
@@ -502,11 +501,10 @@ The following table lists the commands available in the File Migration CLI:
 
 Commands|Version|Description
 --------|----------|---------------
-[configdocs](#tapi-client-configuration-values)|TBD|Displays general and plugin-specific TAPI client configuration documentation. It includes the following information for each entry:<ul><li>Key </li><li>Description</li><li>Default value</li><li>Choices</li></ul>No additional parameters are required for this command.
-[csv](#generating-workspace-CSV-files)|TBD|Autogenerates a single CSV file per workspace. All files are stored in the CSV subfolder of the working directory. The file names have the following format: _EDDSxxxxxxx.csv_. When the migrate command is executed, the File Migration CLI uses the existing CSV file or autogenerates a file on the fly. You can optionally use this command to manually modify CSV files used for a workspace migration that fails due to unsupported migration rules or logic. The available parameters include:<ul><li>/workspaces (optional)</li><li>/jobstatus (optional)</li></ul>
-[migrate](#migrating-workspaces)|TBD|Executes the file migration process on a list of workspaces that you must supply. We recommend that you list three to five workspaces. As each workspace is migrated, File Migration CLI automatically updates the local database with the proper results. The available parameters include:<ul><li>/url</li><li>/workspaces</li><li>/jobstatus (optional)</li><li>/login (optional)</li><li>/enforcessl (optional)</li><li>/configuration (optional)</li></ul>
-[report](#generating-reports)|TBD|Displays migration results for each workspace to the standard output (stdout), including the workspace name and artifact ID, status, total migrated files and bytes, and the timestamps for the last synchronization and migration jobs. The available parameters include:<ul><li>/workspaces (optional)</li><li>/jobstatus (optional)</li></ul>
-[sync](#synchronizing-workspaces)|TBD|Accesses the on-premise EDDS and workspace databases, retrieves data from them, and creates local SQLite databases. When this command is run for the first time, it performs a _baseline_ migration, which creates the local databases. It can be run multiple times for _delta_ migrations that update the databases with changes made to active workspaces. The available parameters include:<ul><li>/sqlinstance</li><li>/sqlpwd</li><li>/sqluser</li><li>/url</li><li>/targetpath</li><li>/workspaces (optional)</li><li>/login (optional)</li><li>/enforcessl (optional)</li><li>/reset (optional)</li></ul>
+[configdocs](#configuration-settings)|Bluestem (9.7)|Displays general and plugin-specific TAPI client configuration documentation. It includes the following information for each entry:<ul><li>Key </li><li>Description</li><li>Default value</li><li>Choices</li></ul>No additional parameters are required for this command.
+[migrate](#migrating-workspaces)|Bluestem (9.7)|Executes the file migration process on a list of workspaces that you must supply. We recommend that you list three to five workspaces. As each workspace is migrated, File Migration CLI automatically updates the local database with the proper results. The available parameters include:<ul><li>/url</li><li>/workspaces</li><li>/jobstatus (optional)</li><li>/login (optional)</li><li>/enforcessl (optional)</li><li>/configuration (optional)</li></ul>
+[report](#generating-reports)|Bluestem (9.7)|Displays migration results for each workspace to the standard output (stdout), including the workspace name and artifact ID, status, total migrated files and bytes, and the timestamps for the last synchronization and migration jobs. The available parameters include:<ul><li>/workspaces (optional)</li><li>/jobstatus (optional)</li></ul>
+[sync](#synchronizing-workspaces)|Bluestem (9.7)|Accesses the on-premise EDDS and workspace databases, retrieves data from them, and creates local SQLite databases. When this command is run for the first time, it performs a _baseline_ migration, which creates the local databases. It can be run multiple times for _delta_ migrations that update the databases with changes made to active workspaces. The available parameters include:<ul><li>/sqlinstance</li><li>/sqlpwd</li><li>/sqluser</li><li>/url</li><li>/targetpath</li><li>/workspaces (optional)</li><li>/login (optional)</li><li>/enforcessl (optional)</li><li>/reset (optional)</li></ul>
 
 </details>
 
@@ -571,7 +569,7 @@ The rolling file sink stores logs in _rolling_ log files in the user profile tem
  
 The File Migration CLI collects APM metrics for only the migrate command. This functionality is enabled by default. For information about the metrics that are collected, see the [README.md file](https://github.com/relativitydev/transfer-api-samples/blob/master/README.md) for the TAPI.
 
-The following command performs a TBD and collects APM metrics. It includes the enabled /apm+ parameter:
+The following command performs a migration and collects APM metrics. It includes the enabled /apm+ parameter:
 
 ```
 Relativity.Migration.Console.exe /command:migrate /url:"https://hostname.mycompany.corp" /login+ /oktaforce+ /workspaces:"1171671;1171672;1171673" /apm+
