@@ -454,6 +454,23 @@ For RelativityOne, all Aspera servers are configured at the root of each support
   ```
 </details>
 
+### UNC file paths
+
+<details><summary>View guidelines for UNC file paths</summary> 
+
+The File Migration CLI requires you to specify file paths in most of the commands that its provides. Relativity supports UNC paths, while Aspera supports only relative paths. To avoid migration failures, use the following guidelines when using remote UNC file paths:
+
+Make sure that the remote UNC path in the /targetpath parameter has the same base path as specified in the /fileshare parameter. For example, the following /targetpath and /fileshare parameter illustrate matching values for a request:
+
+   * /fileshare:"\\files2\T002\Files"
+   * /targetpath:"\\files2\T002\Files\EDDS1111111"
+
+**Note:** These examples illustrate file path conventions used in RelativityOne. For example, the paths all point to the Files directory, and  T002 indicates a tenant ID.
+
+</details>
+
+
+
 ### Configuration settings
 
 <details><summary>View configuration settings</summary>
