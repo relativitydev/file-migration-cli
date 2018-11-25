@@ -1,6 +1,12 @@
 # Relativity File Migration CLI
 
-The Relativity File Migration CLI is an application that supports **_TBD_** Add introduction.
+The Relativity File Migration CLI is an application used for moving native files from a source to a target Relativity instance. During setup, it automatically creates local databases that it uses to persist file metadata retrieved from a source instance. Since the File Migration CLI persists this data, it can also provide information about deltas that occur on the source instance, such as the addition of new native files.
+
+The File Migration CLI supports the following commands for monitoring deltas and moving native files to a target instance:
+
+   * **Sync** – use this command to initially populate the local databases that persist file metadata, and to identify changes to the files stored in the source instance. It updates the local databases with any new file metadata. For example, if new files are added to the source instance, this command updates the local databases with their metadata and persists it.
+  * **Migrate** – use this command to move native files from a source instance to the fileshare on a target Relativity instance. When performing a migration, the File Migration CLI moves the physical files to the specified target fileshare, but it doesn’t make any updates to the databases used by the target instance.
+  * **Report** – use this command to obtain the status information, such as the number of files pending migration or the number of them already migrated. Run this report after synchronizing or migrating files for comparison with expected values.
 
 This page contains the following information:
 
@@ -35,6 +41,8 @@ This page contains the following information:
      * EDDSDBO
      * Invariant
      * InvariantStore 
+
+     **Note:** The File Migration CLI must have physical access to the UNC paths where the native files are stored on the source instance to migrate them to the target instance.
 
   * Target instance - You must be a member of the System Administrators group in Relativity. These permissions are required to migrate native files to the fileshare for the target Relativity instance. For more information, see [System groups](https://help.relativity.com/9.6/Content/Relativity/Groups.htm#System) on the Relativity 9.6 Documentation site.
 
@@ -108,6 +116,12 @@ Use the following steps to synchronize your data:
 ### Running reports
 
 You can generate a report containing information about the progress of each workspace. Additionally, you can use it to verify that the workspaces were actually migrated as expected. For more information, see [Data flow overview](#data-flow-overview).
+
+The File Migration CLI generates a report provides the following information:
+
+   * After you synchronize files, the report lists the number of workspaces with an InProgress status, indicating that they haven’t been migrated yet.
+   * After you migrate files, the report lists the number of files and bytes migrated, and the date of the operation. The status of these files is Completed.
+
 
 Use the following steps to generate a report:
 
@@ -563,7 +577,7 @@ The File Migration CLI uses standard Relativity logging configuration. **_A LogC
     <rule system="*" loggingLevel="Information" sink="File1;Seq1;Http1"/>
   </rules>
   <sinks>
-    <fileSink name="File1" logFileLocation="%temp%\Relativity-Migration\Migration-Cli\" maxFileSizeInMB ="10000" />
+    <fileSink name="File1" logFileLocation="%temp%\Relativity-Transfer\Migration-Cli\" maxFileSizeInMB ="10000" />
     <seqSink name="Seq1" serverUrl="http://localhost:5341" batchSizeLimit="50" waitPeriodSeconds="15" />
     <relativityHttpSink name="Http1" batchSizeLimit="50" waitPeriodSeconds="15" />
   </sinks>
@@ -575,7 +589,7 @@ The File Migration CLI uses standard Relativity logging configuration. **_A LogC
 The rolling file sink stores logs in _rolling_ log files in the user profile temp directory. The following path is used for the log directory:
 
 ```
-%temp%\Relativity-Migration\Migration-Cli
+%temp%\Relativity-Transfer\Migration-Cli\
 ```
 
 </details>
