@@ -4,9 +4,9 @@ The Relativity File Migration CLI is an application used for moving native files
 
 The File Migration CLI supports the following commands for monitoring deltas and moving native files to a target instance:
 
-   * **Sync** – use this command to initially populate the local databases that persist file metadata, and to identify changes to the files stored in the source instance. It updates the local databases with any new file metadata. For example, if new files are added to the source instance, this command updates the local databases with their metadata and persists it.
-  * **Migrate** – use this command to move native files from a source instance to the fileshare on a target Relativity instance. When performing a migration, the File Migration CLI moves the physical files to the specified target fileshare, but it doesn’t make any updates to the databases used by the target instance.
-  * **Report** – use this command to obtain the status information, such as the number of files pending migration or the number of them already migrated. Run this report after synchronizing or migrating files for comparison with expected values.
+* **Sync** – use this command to initially populate the local databases that persist file metadata, and to identify changes to the files stored in the source instance. It updates the local databases with any new file metadata. For example, if new files are added to the source instance, this command updates the local databases with their metadata and persists it.
+* **Migrate** – use this command to move native files from a source instance to the file share on a target Relativity instance. When performing a migration, the File Migration CLI moves the physical files to the specified target file share, but it doesn’t make any updates to the databases used by the target instance.
+* **Report** – use this command to obtain the status information, such as the number of files pending migration or the number of them already migrated. Run this report after synchronizing or migrating files for comparison with expected values.
 
 This page contains the following information:
 
@@ -25,26 +25,26 @@ This page contains the following information:
 
 * Make sure your environment meets these system requirements:
 
-   * Source instance - Version 9.0 or higher for Relativity
-   * Target instance - Bluestem (9.7) release for RelativityOne or Relativity
-   * .NET 4.6.2
-   * Visual C++ 2010 x86 Runtime
-   * Intel 2Ghz (2-4 cores are recommended)
-   * 16GB RAM (32GB of RAM are recommended)
+  * Source instance - Version 9.0 or higher for Relativity
+  * Target instance - Bluestem (9.7) release for RelativityOne or Relativity
+  * .NET 4.6.2
+  * Visual C++ 2010 x86 Runtime
+  * Intel 2Ghz (2-4 cores are recommended)
+  * 16GB RAM (32GB of RAM are recommended)
 
 * Make sure that you have the following permissions:
 
   * Source instance - You must have at least read-only permissions to all files in the source instance repository. These permissions are required to synchronize files in the source instance with the local databases built by the Migration CLI.
-  
+
     Additionally, you must have read-only access to the following databases:
 
-     * EDDSDBO
-     * Invariant
-     * InvariantStore 
+    * EDDSDBO
+    * Invariant
+    * InvariantStore
 
      **Note:** The File Migration CLI must have physical access to the UNC paths where the native files are stored on the source instance to migrate them to the target instance.
 
-  * Target instance - You must be a member of the System Administrators group in Relativity. These permissions are required to migrate native files to the fileshare for the target Relativity instance. For more information, see [System groups](https://help.relativity.com/9.6/Content/Relativity/Groups.htm#System) on the Relativity 9.6 Documentation site.
+  * Target instance - You must be a member of the System Administrators group in Relativity. These permissions are required to migrate native files to the file share for the target Relativity instance. For more information, see [System groups](https://help.relativity.com/9.6/Content/Relativity/Groups.htm#System) on the Relativity 9.6 Documentation site.
 
 ## Setting up the File Migration CLI
 
@@ -63,21 +63,21 @@ Complete the following steps to set up PowerShell scripts for the File Migration
 1. Download the [Relativity.FileMigrator.zip](https://github.com/relativitydev/file-migrator-cli/releases) file.
 1. Create a top-level folder for the current migration job, and add the zip file to it.
 1. Extract the files from the Relativity.FileMigrator.zip file. Verify that  the following files and folder are were extracted:
-     * Setup.ps1 file
-     * Relativity.Migration.Console.exe 
-     * Templates folder
-     * Other miscellaneous files
+    * Setup.ps1 file
+    * Relativity.Migration.Console.exe 
+    * Templates folder
+    * Other miscellaneous files
 1. In the Relativity.FileMigrator folder, locate the **Setup.ps1** script.
 1. Right-click on the script, and select **Run with PowerShell**.
 1. Enter the following information in the PowerShell console window:
 
-     * Enter **Y** when asked if you want to continue.
-     * For the source instance, enter the SQL authentication as Integrated or SQL. For example, enter **I** for Integrated authentication or **S** for SQL authentication. See [Before you begin](#before-you-begin).
-     * Enter the domain name of the SQL instance. For example, it should have this general format: _sqlhost.domain.local_.
-     * For the target instance, enter the Relativity URL.
-     * Enter the path for the target file share. For example, it should have this general format: _\\\files\T002\files_.
-     * Enter a semi-colon delimited list of workspaces to migrate. For example, the list has this format: _1580162;1580184;1580194_.
- 
+    * Enter **Y** when asked if you want to continue.
+    * For the source instance, enter the SQL authentication as Integrated or SQL. For example, enter **I** for Integrated authentication or **S** for SQL authentication. See [Before you begin](#before-you-begin).
+    * Enter the domain name of the SQL instance. For example, it should have this general format: _sqlhost.domain.local_.
+    * For the target instance, enter the Relativity URL.
+    * Enter the path for the target file share. For example, it should have this general format: _\\\files\T002\files_.
+    * Enter a semi-colon delimited list of workspaces to migrate. For example, the list has this format: _1580162;1580184;1580194_.
+
 1. After the setup completes, verify that the following scripts have been added to the top-level folder:
      * Migrate.ps1
      * Report.ps1
@@ -89,16 +89,17 @@ Complete the following steps to set up PowerShell scripts for the File Migration
 
      * Navigate to the **Sync.ps1** file in your top-level folder.
      * Open it with a text editor and add your SQL username and password to the following fields:
-    
+
        ```
        $sql_username = ""
        $sql_password = "" 
        ```
      * Save your changes to the file.
 
-1. To setup another set of workspaces, repeat steps 2 through 8. 
+1. To setup another set of workspaces, repeat steps 2 through 8.
 
 ## Common workflows using PowerShell commands
+
 You can use the PowerShell scripts provided with the File Migration CLI to synchronize data, migrate files, and generate reports. This section provides instructions for running the PowerShell command.
 
 ### Synchronizing a source instance with a local database
@@ -109,9 +110,9 @@ Use the following steps to synchronize your data:
 
 1. In the top level folder, right-click on the **Sync.ps1** script, and select **Run with PowerShell**.
 1. After the scripted runs, verify that the following items were created:
-    
-     * LocalDB folder 
-     * An SQLite database for each of the specified workspaces exists in folder
+
+    * LocalDB folder 
+    * An SQLite database for each of the specified workspaces exists in folder
 
 ### Running reports
 
@@ -119,9 +120,8 @@ You can generate a report containing information about the progress of each work
 
 The File Migration CLI generates a report provides the following information:
 
-   * After you synchronize files, the report lists the number of workspaces with an InProgress status, indicating that they haven’t been migrated yet.
-   * After you migrate files, the report lists the number of files and bytes migrated, and the date of the operation. The status of these files is Completed.
-
+* After you synchronize files, the report lists the number of workspaces with an InProgress status, indicating that they haven’t been migrated yet.
+* After you migrate files, the report lists the number of files and bytes migrated, and the date of the operation. The status of these files is Completed.
 
 Use the following steps to generate a report:
 
@@ -139,12 +139,11 @@ Use the following steps to migrate native files:
 1. In the top level folder, right-click on the **Migrate.ps1** script, and select **Run with PowerShell**.
 2. Monitor the migration progress to ensure that all files transfer successfully.
 
-
 ## Command-line reference
 
 You can optionally run all commands supported by the File Migration CLI through a command-line interface rather than with PowerShell scripts. The File Migration CLI uses standard CLI commands and parameters, which provide additional options for fine-tuning how the supported operations are run. For example, you can use specific parameters to set the number of files or bytes per batch when running a migration job.
 
-###  Command-line syntax
+### Command-line syntax
 
 Review the following table to familiarize yourself with the command-line syntax used in this documentation. Each section includes a generic representation of a command with required and optional parameters, as well as an example using actual values. The following table outlines the notation used in the generic commands:
 
@@ -156,7 +155,7 @@ Text without brackets or braces|Indicates you must type the text as shown.
 {Text inside braces}|A list of required parameters. You must choose one of the items.
 Vertical bar (\|)|A separator for mutually exclusive items. You must choose one item.
 Ellipsis (…)|Items that can be repeated.  
- <br/>
+<br/>
 
 <details><summary>View additional syntax conventions</summary>
 
@@ -203,14 +202,14 @@ When you execute the sync command, you must authenticate to the source, such as 
 
     ``` 
    /command:sync /sqlinstance:"sqlinstance.mycompany.corp" /sqlpwd:"P@ssw0rd@1" /sqluser:"sa" /url:"https://hostname.mycompany.corp" /login+ /enforcessl- /targetpath:"\\files\SomeFolder\Files" /sqlintegrated- /workspaces:"1027428"
-    ``` 
+    ```
 
 * **Integrated login for SQL Server** - You can use integrated login to authenticate to the SQL Server by setting the /sqlintegrated parameter to True. In this case, you don't need to provide a username and password for the SQL Server.
 
      Integrated login for SQL Server has the following general command format:
 
      ```
-     Relativity.Migration.Console.exe /command:<YourCommand> [ParametersForCommand] /sqlinstance:<"Value"> /url:<"Value"> /login+ /enforcessl- /sqlintegrated:+ 
+     Relativity.Migration.Console.exe /command:<YourCommand> [ParametersForCommand] /sqlinstance:<"Value"> /url:<"Value"> /login+ /enforcessl- /sqlintegrated:+
      ```
 
     The following example illustrates how to use this login type in a command:
@@ -237,11 +236,11 @@ Parameter|Description
 
 <details><summary>Target instance - Relativity authentication</summary>
 
-You must provide credentials for authentication, when you make certain commands through the File Migration CLI to a Relativity or RelativityOne target environment. 
+You must provide credentials for authentication, when you make certain commands through the File Migration CLI to a Relativity or RelativityOne target environment.
 
-**Note:** The File Migration CLI doesn’t persist your username or password. This information isn’t stored or cached by the tool, so you must reenter it for each login. 
+**Note:** The File Migration CLI doesn’t persist your username or password. This information isn’t stored or cached by the tool, so you must reenter it for each login.
 
-This list describes the methods available for authenticating to a target through the File Migration CLI: 
+This list describes the methods available for authenticating to a target through the File Migration CLI:
 
 * **Username and password login** - You can enter your username and password in the command-line using the /username and /password parameters respectively.
 
@@ -261,7 +260,7 @@ This list describes the methods available for authenticating to a target through
      Interactive login has the following general command format:
 
      ```
-     Relativity.Migration.Console.exe /command:<YourCommand> [ParametersForCommand] /url:<"Value"> /login+     
+     Relativity.Migration.Console.exe /command:<YourCommand> [ParametersForCommand] /url:<"Value"> /login+
      ```
 
     The following example illustrates how to use this login type in a command:
@@ -300,7 +299,7 @@ Parameter|Description
 
 ### Synchronizing workspaces
 
-The sync command builds local databases that store the metadata for the natives files in the source instance. You must run this command before you attempt to migrate any native files. 
+The sync command builds local databases that store the metadata for the natives files in the source instance. You must run this command before you attempt to migrate any native files.
 
 After the File Migration CLI builds the local databases, you can use the sync command to update them when changes have occurred in the source instance. You have the option to sync all the workspace databases from the source, or a specific group of them. For more information, see [Data flow overview](#data-flow-overview).
 
@@ -308,21 +307,21 @@ After the File Migration CLI builds the local databases, you can use the sync co
 
 Setting up or updating local master or workspace databases has the following general command format:
 
-``` 
-Relativity.Migration.Console.exe /command:sync /sqlinstance:<"Value"> {/sqluser:<"Value"> /sqlpwd:<"Value"> /login+ /oktaforce+ | /login+ /enforcessl- /sqlintegrated:+} /url:<"Value"> {/targetpath:<"Value">|/fileshare:<"Value">} /sha1:<+ | -> /metadata:<+ | -> /skipinv:<+ | -> /skipnative:<+ | -> 
-``` 
+```
+Relativity.Migration.Console.exe /command:sync /sqlinstance:<"Value"> {/sqluser:<"Value"> /sqlpwd:<"Value"> /login+ /oktaforce+ | /login+ /enforcessl- /sqlintegrated:+} /url:<"Value"> {/targetpath:<"Value">|/fileshare:<"Value">} /sha1:<+ | -> /metadata:<+ | -> /skipinv:<+ | -> /skipnative:<+ | ->
+```
 
 The following example illustrates how to set up the local master and workspace databases for the first time. It can also be used to update the local databases for active workspaces.
  
-``` 
+```
 Relativity.Migration.Console.exe /command:sync /sqlinstance:"sqlinstance.mycompany.corp.mycompany.corp" /sqlpwd:"SomePassword!" /sqluser:"SomeUserName" /url:"https://hostname.mycompany.corp" /login+ /oktaforce+ /targetpath:"\\files\SomeFolder\Files" /sha1- /metadata- /skipinv- /skipnative-
-``` 
+```
 
 #### Synchronizing specific workspace databases
 
 Synchronizing a specific group of workspace databases has the following general command format:
 
-``` 
+```
 Relativity.Migration.Console.exe /command:sync /sqlinstance:<"Value"> {/sqluser:<"Value"> /sqlpwd:<"Value"> /login+ /oktaforce+ | /login+ /enforcessl- /sqlintegrated:+} /url:<"Value"> {/targetpath:<"Value">|/fileshare:<"Value">} /sha1:<+ | -> /metadata:<+ | -> /skipinv:<+ | -> /skipnative:<+ | -> /workspaces:<"Value">
 ```
 
@@ -335,7 +334,6 @@ Relativity.Migration.Console.exe /command:sync /sqlinstance:"sqlinstance.mycompa
 <details><summary>View parameter descriptions</summary>
 
 The following table describes each of the parameters used in a migration command. For more parameters, see [Commands](#commands) and [Authentication](#authentication).
-
 
 Parameter|Description
 --------------|------------------
@@ -368,7 +366,7 @@ The following table describes each of the parameters used in a report command. F
 
 Parameter|Description
 --------------|--------------
-/jobstatus:{value}|Indicates the job status filter applied to certain migration commands. For example, to run a report on completed jobs, you would set this parameter to Completed when executing the report command. Supported values include: <ul><li>None</li><li>InProgress - indicates that the file migration hasn't yet completed.</li><li>Completed - indicates that the file migration has finished. </li><li>Skipped - indicates there wasn't any files to migrate.</li></ul> 
+/jobstatus:{value}|Indicates the job status filter applied to certain migration commands. For example, to run a report on completed jobs, you would set this parameter to Completed when executing the report command. Supported values include: <ul><li>None</li><li>InProgress - indicates that the file migration hasn't yet completed.</li><li>Completed - indicates that the file migration has finished. </li><li>Skipped - indicates there wasn't any files to migrate.</li></ul>
 
 </details>
 
@@ -418,7 +416,7 @@ This section includes the following additional information about the File Migrat
 
 The File Migration CLI supports both absolute and relative paths. The File Migration CLI leverages path resolvers used by the underlying TAPI architecture to adapt paths from one format to another. It supports the following path architecture:
 
- * **On-premises Relativity** - supports UNC paths. For more information, see [Absolute paths used by on-premises Relativity](#absolute-paths-used-by-on-premises-Relativity).
+* **On-premises Relativity** - supports UNC paths. For more information, see [Absolute paths used by on-premises Relativity](#absolute-paths-used-by-on-premises-Relativity).
 * **RelativityOne** - supports only UNIX-style relative paths, because it is deployed on Aspera. By default, the File Migration CLI can resolve UNC paths to relative paths for backwards compatibility. See [UNIX-style relative paths used by RelativityOne](#unix-style-relative-paths-used-by-RelativityOne).
 
 ### Absolute paths used by on-premises Relativity
@@ -447,7 +445,7 @@ When you browse RelativityOne file shares, you see the following default structu
 \\files.txxx.ctus010000.relativity.one\Txxx\Temp
 ```
 
-For RelativityOne, all Aspera servers are configured at the root of each supported file share. Each file share has an equivalent absolute and relative path as illustrated here: 
+For RelativityOne, all Aspera servers are configured at the root of each supported file share. Each file share has an equivalent absolute and relative path as illustrated here:
 
 * Aspera file share path
 
@@ -470,7 +468,7 @@ For RelativityOne, all Aspera servers are configured at the root of each support
 
 ### UNC file paths
 
-<details><summary>View guidelines for UNC file paths</summary> 
+<details><summary>View guidelines for UNC file paths</summary>
 
 The File Migration CLI requires you to specify file paths in most of the commands that its provides. Relativity supports UNC paths, while Aspera supports only relative paths. To avoid migration failures, use the following guidelines when using remote UNC file paths:
 
@@ -482,8 +480,6 @@ Make sure that the remote UNC path in the /targetpath parameter has the same bas
 **Note:** These examples illustrate file path conventions used in RelativityOne. For example, the paths all point to the Files directory, and  T002 indicates a tenant ID.
 
 </details>
-
-
 
 ### Configuration settings
 
@@ -538,7 +534,6 @@ Commands|Version|Description
 [sync](#synchronizing-workspaces)|Bluestem (9.7)|Accesses the on-premise EDDS and workspace databases, retrieves data from them, and creates local SQLite databases. When this command is run for the first time, it performs a _baseline_ migration, which creates the local databases. It can be run multiple times for _delta_ migrations that update the databases with changes made to active workspaces. The available parameters include:<ul><li>/sqlinstance</li><li>/sqlpwd</li><li>/sqluser</li><li>/url</li><li>/targetpath</li><li>/workspaces (optional)</li><li>/login (optional)</li><li>/enforcessl (optional)</li><li>/reset (optional)</li></ul>
 
 </details>
-
 
 ### Exit codes
 
