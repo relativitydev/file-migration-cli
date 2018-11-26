@@ -4,9 +4,9 @@ The Relativity File Migration CLI is an application used for moving native files
 
 The File Migration CLI supports the following commands for monitoring deltas and moving native files to a target instance:
 
-* **Sync** – use this command to initially populate the local databases that persist file metadata, and to identify changes to the files stored in the source instance. It updates the local databases with any new file metadata. For example, if new files are added to the source instance, this command updates the local databases with their metadata and persists it.
-* **Migrate** – use this command to move native files from a source instance to the file share on a target Relativity instance. When performing a migration, the File Migration CLI moves the physical files to the specified target file share, but it doesn’t make any updates to the databases used by the target instance.
-* **Report** – use this command to obtain the status information, such as the number of files pending migration or the number of them already migrated. Run this report after synchronizing or migrating files for comparison with expected values.
+* **Sync** - use this command to initially populate the local databases that persist file metadata, and to identify changes to the files stored in the source instance. It updates the local databases with any new file metadata. For example, if new files are added to the source instance, this command updates the local databases with their metadata and persists it.
+* **Migrate** - use this command to move native files from a source instance to the file share on a target Relativity instance. When performing a migration, the File Migration CLI moves the physical files to the specified target file share, but it doesn’t make any updates to the databases used by the target instance.
+* **Report** - use this command to obtain the status information, such as the number of files pending migration or the number of them already migrated. Run this report after synchronizing or migrating files for comparison with expected values.
 
 This page contains the following information:
 
