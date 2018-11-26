@@ -27,12 +27,12 @@ The File Transfer CLI retrieves file metadata on a source instance, persists thi
 
 Based on this diagram, key features of the data workflow used by the File Migration CLI include:
 
-* **Accesses the source databases** – The File Migration CLI interacts directly with the databases on the source instance, so you must have SQL access to the source instance when executing a sync command.
-* **Retrieves metadata from source databases** – When you execute a sync command, the CLI retrieves the metadata for native files obtained from master, workspace, and Invariant databases on the source instance.
-* **Populates and updates local databases** – The CLI uses the metadata for native files obtained from the first execution of the sync command to set a baseline. It inserts new records with this metadata to the local database and persists this metadata for future comparisons. On subsequent executions of the sync command, the CLI updates the local database records with metadata about new files or changes to existing ones to maintains a series of deltas.
-* **Sets up migration requests** – The deltas between the local databases and the source instance are used to determine which files have changed and may need to be migrated to a target instance. When you execute a migrate command, the CLI uses the Transfer API as the underlying technology for migration requests.
-* **Accesses source and target file shares** – During migration, the CLI moves the physical files from a file share on the source instance to a file share on the target instance. You must have direct access to the file shares on the source and target file servers when executing a migrate command. You must also have system admin permissions to the target instance.
-* **Migrates files** – When you execute the migrate command, the CLI moves native files from the source to target instance based on the metadata persisted in the local databases, which identify deltas between the initial or later sync operations and the source instance. Using the deltas ensures that only new or modified files from the source instance are migrated, eliminating the need to move all files when a change occurs. The CLI moves the physical files to the target instance, but it doesn’t make any updates to the databases on the target instance.
+* **Accesses the source databases** - The File Migration CLI interacts directly with the databases on the source instance, so you must have SQL access to the source instance when executing a sync command.
+* **Retrieves metadata from source databases** - When you execute a sync command, the CLI retrieves the metadata for native files obtained from master, workspace, and Invariant databases on the source instance.
+* **Populates and updates local databases** - The CLI uses the metadata for native files obtained from the first execution of the sync command to set a baseline. It inserts new records with this metadata to the local database and persists this metadata for future comparisons. On subsequent executions of the sync command, the CLI updates the local database records with metadata about new files or changes to existing ones to maintains a series of deltas.
+* **Sets up migration requests** - The deltas between the local databases and the source instance are used to determine which files have changed and may need to be migrated to a target instance. When you execute a migrate command, the CLI uses the Transfer API as the underlying technology for migration requests.
+* **Accesses source and target file shares** - During migration, the CLI moves the physical files from a file share on the source instance to a file share on the target instance. You must have direct access to the file shares on the source and target file servers when executing a migrate command. You must also have system admin permissions to the target instance.
+* **Migrates files** - When you execute the migrate command, the CLI moves native files from the source to target instance based on the metadata persisted in the local databases, which identify deltas between the initial or later sync operations and the source instance. Using the deltas ensures that only new or modified files from the source instance are migrated, eliminating the need to move all files when a change occurs. The CLI moves the physical files to the target instance, but it doesn’t make any updates to the databases on the target instance.
 
 </details>
 
@@ -49,7 +49,7 @@ Based on this diagram, key features of the data workflow used by the File Migrat
 
 * Make sure that you have the following permissions:
 
-  * Source instance - You must have at least read-only permissions to all files in the source instance repository. These permissions are required to synchronize files in the source instance with the local databases built by the Migration CLI.
+  * **Source instance** - You must have at least read-only permissions to all files in the source instance repository. These permissions are required to synchronize files in the source instance with the local databases built by the Migration CLI.
 
     Additionally, you must have read-only access to the following databases:
 
@@ -59,7 +59,7 @@ Based on this diagram, key features of the data workflow used by the File Migrat
 
      **Note:** The File Migration CLI must have physical access to the UNC paths where the native files are stored on the source instance to migrate them to the target instance.
 
-  * Target instance - You must be a member of the System Administrators group in Relativity. These permissions are required to migrate native files to the file share for the target Relativity instance. For more information, see [System groups](https://help.relativity.com/9.6/Content/Relativity/Groups.htm#System) on the Relativity 9.6 Documentation site.
+  * **Target instance** - You must be a member of the System Administrators group in Relativity. These permissions are required to migrate native files to the file share for the target Relativity instance. For more information, see [System groups](https://help.relativity.com/9.6/Content/Relativity/Groups.htm#System) on the Relativity 9.6 Documentation site.
 
 ## Setting up the File Migration CLI
 
@@ -371,7 +371,7 @@ Parameter|Description
 
 ### Generating reports
 
-When generating a report through the command-line, you can use additional filter options, such as the /jobstatus parameter. For example, you can a run a report on only completed or in progress jobs. For more information, see [Data flow overview](#data-flow-overview).
+When generating a report through the command-line, you can use additional filter options, such as the /jobstatus parameter. For example, you can a run a report on only completed or in progress jobs. For more information, see [Running reports](#running-reports).
 
 The following example generates a basic migration report for the local database:
 
