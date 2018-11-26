@@ -123,6 +123,10 @@ The File Migration CLI generates a report provides the following information:
 * After you synchronize files, the report lists the number of workspaces with an InProgress status, indicating that they haven’t been migrated yet.
 * After you migrate files, the report lists the number of files and bytes migrated, and the date of the operation. The status of these files is Completed.
 
+The following screen shot illustrates a sample report run after a sync job executed:
+
+![syncreportv2](https://user-images.githubusercontent.com/43040844/49035764-5be7f600-f17b-11e8-9879-0ed21e71b5b6.png)
+
 Use the following steps to generate a report:
 
 1. In the top level folder, right-click on the **Report.ps1** script, and select **Run with PowerShell**.
