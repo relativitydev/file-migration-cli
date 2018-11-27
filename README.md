@@ -2,11 +2,11 @@
 
 The Relativity File Migration CLI is an application used for moving native files from a source to a target Relativity instance. During setup, it automatically creates local databases that it uses to persist file metadata retrieved from a source instance. Since the File Migration CLI persists this data, it can also provide information about deltas that occur on the source instance, such as the addition of new native files.
 
-The File Migration CLI supports the following commands for monitoring deltas and moving native files to a target instance:
+The File Migration CLI supports the following commands for tracking changes on the source instance used when migrating workspaces and processing native files to the target instance:
 
-* **Sync** - use this command to initially populate the local databases that persist file metadata, and to identify changes to the files stored in the source instance. It updates the local databases with any new file metadata. For example, if new files are added to the source instance, this command updates the local databases with their metadata and persists it.
-* **Migrate** - use this command to move native files from a source instance to the file share on a target Relativity instance. When performing a migration, the File Migration CLI moves the physical files to the specified target file share, but it doesn’t make any updates to the databases used by the target instance.
-* **Report** - use this command to obtain the status information, such as the number of files pending migration or the number of them already migrated. Run this report after synchronizing or migrating files for comparison with expected values.
+* **Sync** - use this command to initially populate the local databases that persist file details, and to identify changes to the files stored in the source instance. The File Migration CLI persists the following details for workspace and processing native files: the UNC path, size, name, SHA-1 hash for processing files, and other fields. It also updates the local databases with any new file details. For example, if new files are added to the source instance, this command updates the local databases with their details and persists it.
+* **Migrate** - use this command to migrate native files from a source instance to the file share on a target Relativity instance. The File Migration CLI migrates the physical files to the specified target file share. The migration doesn't make any updates to the target workspace or Invariant databases.
+* **Report** - use this command to obtain the status information, such as the number of files pending. migration or the number of them already migrated. Run this report after synchronizing or migrating files for comparison with expected values.
 
 This page contains the following information:
 
@@ -27,12 +27,12 @@ The File Transfer CLI retrieves file metadata on a source instance, persists thi
 
 Based on this diagram, key features of the data workflow used by the File Migration CLI include:
 
-* **Accesses the source databases** - The File Migration CLI interacts directly with the databases on the source instance, so you must have SQL access to the source instance when executing a sync command.
+* **Accesses the source databases** - The File Migration CLI connects directly to the databases on the source instance, so you must have SQL access to the source instance when executing a sync command. You can use integrated or SQL authentication for this access. For more information, see [Before you begin](#before-you-begin).
 * **Retrieves metadata from source databases** - When you execute a sync command, the CLI retrieves the metadata for native files obtained from master, workspace, and Invariant databases on the source instance.
-* **Populates and updates local databases** - The CLI uses the metadata for native files obtained from the first execution of the sync command to set a baseline. It inserts new records with this metadata to the local database and persists this metadata for future comparisons. On subsequent executions of the sync command, the CLI updates the local database records with metadata about new files or changes to existing ones to maintains a series of deltas.
+* **Populates and updates local databases** - The CLI uses the metadata for native files obtained from the first execution of the sync command to set a baseline. It inserts new records with this metadata to the local database and persists this metadata for future comparisons. On subsequent executions of the sync command, the CLI updates the local database records with metadata about new files or changes to existing ones to maintain a series of deltas.
 * **Sets up migration requests** - The deltas between the local databases and the source instance are used to determine which files have changed and may need to be migrated to a target instance. When you execute a migrate command, the CLI uses the Transfer API as the underlying technology for migration requests.
-* **Accesses source and target file shares** - During migration, the CLI moves the physical files from a file share on the source instance to a file share on the target instance. You must have direct access to the file shares on the source and target file servers when executing a migrate command. You must also have system admin permissions to the target instance.
-* **Migrates files** - When you execute the migrate command, the CLI moves native files from the source to target instance based on the metadata persisted in the local databases, which identify deltas between the initial or later sync operations and the source instance. Using the deltas ensures that only new or modified files from the source instance are migrated, eliminating the need to move all files when a change occurs. The CLI moves the physical files to the target instance, but it doesn’t make any updates to the databases on the target instance.
+* **Accesses source and target file shares** - The CLI migrates the physical files from a file share on the source instance to a file share on the target instance. For this process, you must have direct access to the file shares on the source file servers. Depending on whether the file share is accessible, the Transfer API automatically chooses the _client_ for the target, such as direct, Aspera, or web. For this process, you must have system admin permissions to the target instance.
+* **Migrates files** - When you execute the migrate command, the CLI migrates native files from the source to target instance based on the file details persisted in the local databases, which identify deltas between the initial or later sync operations, and the source instance. Using the deltas ensures that only new or modified files from the source instance are migrated, eliminating the need to migrate all files when a change occurs. The CLI migrates the physical files to the target instance. The migration doesn't make any updates to the target workspace or Invariant databases.
 
 </details>
 
@@ -71,21 +71,21 @@ Review the following best practices:
 
 * Run the File Migration CLI from your local machine. While you can run it from a file share, the File Migration CLI performs better when it runs from a local machine.
 
-* Create a new top-level folder for each set of workspaces that you want to migrate. The File Migration CLI builds separate databases for each migration when you create separate top-level folders for them. The SQLite databases persist the data for each run on your local machine. For example, you might create a series of top-level folders, such as Phase 1, Phase 2, and so on.
+* Create a new top-level folder for each set of workspaces that you want to migrate. The File Migration CLI builds separate databases for each migration when you create separate top-level folders for them. The local databases persist the data for each run on your local machine. For example, you might create a series of top-level folders, such as Phase 1, Phase 2, and so on.
 
 Complete the following steps to set up PowerShell scripts for the File Migration CLI:
 
 1. Download the [Relativity.FileMigrator.zip](https://github.com/relativitydev/file-migrator-cli/releases) file.
-1. Create a top-level folder for the current migration job, and add the zip file to it.
+1. Create a top-level folder for the current migration job and copy the zip file to it.
 1. Extract the files from the Relativity.FileMigrator.zip file. Verify that  the following files and folder are were extracted:
     * Setup.ps1 file
     * Relativity.Migration.Console.exe 
     * Templates folder
-    * Other miscellaneous files
 1. In the Relativity.FileMigrator folder, locate the **Setup.ps1** script.
-1. Right-click on the script, and select **Run with PowerShell**.
+1. Right-click on the script and select **Run with PowerShell**.
 1. Enter the following information in the PowerShell console window:
-
+   
+   ![powershellsetupscript](https://user-images.githubusercontent.com/43040844/49112085-755e7000-f257-11e8-9d14-9d60b9bacdb3.png)
     * Enter **Y** when asked if you want to continue.
     * For the source instance, enter the SQL authentication as Integrated or SQL. For example, enter **I** for Integrated authentication or **S** for SQL authentication. See [Before you begin](#before-you-begin).
     * Enter the domain name of the SQL instance. For example, it should have this general format: _sqlhost.domain.local_.
@@ -119,15 +119,15 @@ You can use the PowerShell scripts provided with the File Migration CLI to synch
 
 ### Synchronizing a source instance with a local database
 
-Before performing a migration, you must build local databases that store the metadata for the natives files in the source instance. The File Migration CLI builds these databases when you run a sync job for the first time. When you run subsequent jobs, the synch command updates your local databases with any changes made to the files in the source instance and continues to persist this information. For more information, see [Data flow overview](#data-flow-overview).
+Before performing a migration, you must build local databases that store the metadata for the native files in the source instance. The File Migration CLI builds these databases when you run a sync job for the first time. When you run subsequent jobs, the synch command updates your local databases with any changes made to the files in the source instance and continues to persist this information. For more information, see [Data flow overview](#data-flow-overview).
 
 Use the following steps to synchronize your data:
 
-1. In the top level folder, right-click on the **Sync.ps1** script, and select **Run with PowerShell**.
+1. In the top-level folder, right-click on the **Sync.ps1** script, and select **Run with PowerShell**.
 1. After the scripted runs, verify that the following items were created:
 
     * LocalDB folder 
-    * An SQLite database for each of the specified workspaces exists in folder
+    * An local database for each of the specified workspaces exists in folder
 
 ### Running reports
 
@@ -144,19 +144,19 @@ The following screen shot illustrates a sample report run after a sync job execu
 
 Use the following steps to generate a report:
 
-1. In the top level folder, right-click on the **Report.ps1** script, and select **Run with PowerShell**.
+1. In the top-level folder, right-click on the **Report.ps1** script, and select **Run with PowerShell**.
 1. Review the report displayed in the console window.
 
 ### Migrating native files
 
-You can migrate natives files to your target Relativity instance after you have run the sync job. For more information, see [Data flow overview](#data-flow-overview).
+You can migrate native files to your target Relativity instance after you have run the sync job. For more information, see [Data flow overview](#data-flow-overview).
 
 **Note:** Don't attempt to run a migration job unless you have already run the Sync.ps1 script, and verified that it completed successfully. See [Synchronizing a source instance with a local database](#synchronizing-a-source-instance-with-a-local-database).
 
 Use the following steps to migrate native files:
 
-1. In the top level folder, right-click on the **Migrate.ps1** script, and select **Run with PowerShell**.
-2. Monitor the migration progress to ensure that all files transfer successfully.
+1. In the top-level folder, right-click on the **Migrate.ps1** script, and select **Run with PowerShell**.
+2. Monitor the migration progress to ensure that all files transfer successfully. For information on performance, see [Telemetry and metrics](https://help.relativity.com/9.6/Content/Relativity/Metrics/Telemetry.htm) on the Relativity 9.6 Documentation site.
 
 ## Command-line reference
 
@@ -318,7 +318,7 @@ Parameter|Description
 
 ### Synchronizing workspaces
 
-The sync command builds local databases that store the metadata for the natives files in the source instance. You must run this command before you attempt to migrate any native files.
+The sync command builds local databases that store the metadata for the native files in the source instance. You must run this command before you attempt to migrate any native files.
 
 After the File Migration CLI builds the local databases, you can use the sync command to update them when changes have occurred in the source instance. You have the option to sync all the workspace databases from the source, or a specific group of them. For more information, see [Data flow overview](#data-flow-overview).
 
@@ -391,7 +391,7 @@ Parameter|Description
 
 ### Migrating native files 
 
-Before you can migrate natives files through the command-line, you must run the sync command, and verify that it completed successfully. You need to set the authentication parameters required by the target instance for the migration job. For more information, see [Data flow overview](#data-flow-overview).
+Before you can migrate native files through the command-line, you must run the sync command, and verify that it completed successfully. You need to set the authentication parameters required by the target instance for the migration job. For more information, see [Data flow overview](#data-flow-overview).
 
 Migrating native files has the following general command format:
 
@@ -550,7 +550,7 @@ Commands|Version|Description
 [configdocs](#configuration-settings)|Bluestem (9.7)|Displays general and plugin-specific TAPI client configuration documentation. It includes the following information for each entry:<ul><li>Key </li><li>Description</li><li>Default value</li><li>Choices</li></ul>No additional parameters are required for this command.
 [migrate](#migrating-workspaces)|Bluestem (9.7)|Executes the file migration process on a list of workspaces that you must supply. We recommend that you list three to five workspaces. As each workspace is migrated, File Migration CLI automatically updates the local database with the proper results. The available parameters include:<ul><li>/url</li><li>/workspaces</li><li>/jobstatus (optional)</li><li>/login (optional)</li><li>/enforcessl (optional)</li><li>/configuration (optional)</li></ul>
 [report](#generating-reports)|Bluestem (9.7)|Displays migration results for each workspace to the standard output (stdout), including the workspace name and artifact ID, status, total migrated files and bytes, and the timestamps for the last synchronization and migration jobs. The available parameters include:<ul><li>/workspaces (optional)</li><li>/jobstatus (optional)</li></ul>
-[sync](#synchronizing-workspaces)|Bluestem (9.7)|Accesses the on-premise EDDS and workspace databases, retrieves data from them, and creates local SQLite databases. When this command is run for the first time, it performs a _baseline_ migration, which creates the local databases. It can be run multiple times for _delta_ migrations that update the databases with changes made to active workspaces. The available parameters include:<ul><li>/sqlinstance</li><li>/sqlpwd</li><li>/sqluser</li><li>/url</li><li>/targetpath</li><li>/workspaces (optional)</li><li>/login (optional)</li><li>/enforcessl (optional)</li><li>/reset (optional)</li></ul>
+[sync](#synchronizing-workspaces)|Bluestem (9.7)|Accesses the on-premise EDDS and workspace databases, retrieves data from them, and creates local databases. When this command is run for the first time, it performs a _baseline_ migration, which creates the local databases. It can be run multiple times for _delta_ migrations that update the databases with changes made to active workspaces. The available parameters include:<ul><li>/sqlinstance</li><li>/sqlpwd</li><li>/sqluser</li><li>/url</li><li>/targetpath</li><li>/workspaces (optional)</li><li>/login (optional)</li><li>/enforcessl (optional)</li><li>/reset (optional)</li></ul>
 
 </details>
 
