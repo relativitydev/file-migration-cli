@@ -156,7 +156,7 @@ You can migrate native files to your target Relativity instance after you have r
 Use the following steps to migrate native files:
 
 1. In the top-level folder, right-click on the **Migrate.ps1** script, and select **Run with PowerShell**.
-2. Monitor the migration progress to ensure that all files transfer successfully. For information on performance, see [Telemetry and metrics](https://help.relativity.com/9.6/Content/Relativity/Metrics/Telemetry.htm) on the Relativity 9.6 Documentation site.
+2. Monitor the migration progress to ensure that all files transfer successfully. For information on performance, see [Performance considerations](https://help.relativity.com/RelativityOne/Content/Relativity/RelativityOne_Staging_Explorer/Staging_Explorer.htm#Performa) on the Relativity 9.6 Documentation site.
 
 ## Command-line reference
 
