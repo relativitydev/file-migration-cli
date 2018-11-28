@@ -141,7 +141,7 @@ The File Migration CLI generates a report provides the following information:
 
 The following screen shot illustrates a sample report run after a sync job executed:
 
-![syncreportv2](https://user-images.githubusercontent.com/43040844/49035764-5be7f600-f17b-11e8-9879-0ed21e71b5b6.png)
+![syncreportv3](https://user-images.githubusercontent.com/43040844/49180368-0d249280-f31a-11e8-9071-73252da2d3de.png)
 
 Use the following steps to generate a report:
 
