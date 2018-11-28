@@ -14,7 +14,7 @@ This page contains the following information:
 * [Before you begin](#before-you-begin)
 * [Setting up the File Migration CLI](#setting-up-the-file-migration-cli)
 * [Common workflows using PowerShell commands](#common-workflows-using-powershell-commands)
-* [Migration performance metrics](#migration-performance-metrics).
+* [Migration performance metrics](#migration-performance-metrics)
 * [Command-line reference](#command-line-reference)
 * [Server paths, commands, and other reference information](#server-paths-commands-and-other-reference-information)
 
