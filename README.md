@@ -163,15 +163,15 @@ Use the following steps to migrate native files:
 
 The File Migration CLI uses the TAPI to provide some of its underlying functionality. The following table contains performance metrics for data migrated from a Hyper-V environment to a RelativityOne, using the TAPI.
 
-Data set|Requested transfer rate (Mbps)|Average transfer rate (Mbps)|Elapsed time (dd:hh:mm:ss)|Transfer date
---------|--------|--------|--------|--------
-Small|300|112|00:00:06:43|07/19/2018
-Small|55|49|00:00:13:43|07/31/2018
-Medium|300|61|00:00:17:51|07/19/2018
-Medium|55|40|00:00:27:40|07/31/2018
-Large|300|49|00:00:39:27|07/19/2018
-Large|55|38|00:00:47:40|07/31/2018
-Perf60-Processed|300|25|00:05:04:49|07/24/2018
+Data set|Requested transfer rate (Mbps)|Average transfer rate (Mbps)|Elapsed time (dd:hh:mm:ss)
+--------|--------|--------|--------
+Small|300|112|00:00:06:43
+Small|55|49|00:00:13:43
+Medium|300|61|00:00:17:51
+Medium|55|40|00:00:27:40
+Large|300|49|00:00:39:27
+Large|55|38|00:00:47:40
+Perf60-Processed|300|25|00:05:04:49
 
 ## Command-line reference
 
