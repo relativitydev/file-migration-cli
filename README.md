@@ -620,7 +620,7 @@ Relativity.Migration.Console.exe /command:migrate /url:"https://hostname.mycompa
 The File Migration CLI uses the Transfer API (TAPI) to provide some of its underlying functionality. The following table contains performance metrics for data migrated from a Hyper-V environment to a RelativityOne, using the TAPI.
 
 Data set|TAPI plugin|TAPI requested transfer rate (Mbps)|Average transfer rate (Mbps)|Elapsed time (dd:hh:mm:ss)|Transfer date
---------|--------|--------|--------|--------|--------|--------
+--------|--------|--------|--------|--------|--------
 Small|Aspera (SAMBA)|300|112|00:00:06:43|07/19/2018
 Small|Aspera (SAMBA)|55|49|00:00:13:43|07/31/2018
 Medium|Aspera (SAMBA)|300|61|00:00:17:51|07/19/2018
