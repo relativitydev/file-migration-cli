@@ -156,7 +156,7 @@ You can migrate native files to your target Relativity instance after you have r
 Use the following steps to migrate native files:
 
 1. In the top-level folder, right-click on the **Migrate.ps1** script, and select **Run with PowerShell**.
-2. Monitor the migration progress to ensure that all files transfer successfully. For information on performance, see [Performance considerations](https://help.relativity.com/RelativityOne/Content/Relativity/RelativityOne_Staging_Explorer/Staging_Explorer.htm#Performa) on the Relativity 9.6 Documentation site.
+2. Monitor the migration progress to ensure that all files transfer successfully. For information on performance, see [Migration performance metrics](#migration-performance-metrics).
 
 ## Command-line reference
 
@@ -610,5 +610,23 @@ The following command performs a migration and collects APM metrics. It includes
 ```
 Relativity.Migration.Console.exe /command:migrate /url:"https://hostname.mycompany.corp" /login+ /oktaforce+ /workspaces:"1171671;1171672;1171673" /apm+
 ```
+
+</details>
+
+### Migration performance metrics
+
+<details><summary>View migration performance metrics</summary>
+
+The File Migration CLI uses the Transfer API (TAPI) to provide some of its underlying functionality. The following table contains performance metrics for data migrated from a Hyper-V environment to a RelativityOne, using the TAPI.
+
+Data set|TAPI plugin|TAPI requested transfer rate (Mbps)|Average transfer rate (Mbps)|Elapsed time (dd:hh:mm:ss)|Transfer date
+--------|--------|--------|--------|--------|--------|--------
+Small|Aspera (SAMBA)|300|112|00:00:06:43|07/19/2018
+Small|Aspera (SAMBA)|55|49|00:00:13:43|07/31/2018
+Medium|Aspera (SAMBA)|300|61|00:00:17:51|07/19/2018
+Medium|Aspera (SAMBA)|55|40|00:00:27:40|07/31/2018
+Large|Aspera (SAMBA)|300|49|00:00:39:27|07/19/2018
+Large|Aspera (SAMBA)|55|38|00:00:47:40|07/31/2018
+Perf60-Processed|Aspera (SAMBA)|300|25|00:05:04:49|07/24/2018
 
 </details>
