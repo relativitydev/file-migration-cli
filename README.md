@@ -14,12 +14,13 @@ This page contains the following information:
 * [Before you begin](#before-you-begin)
 * [Setting up the File Migration CLI](#setting-up-the-file-migration-cli)
 * [Common workflows using PowerShell commands](#common-workflows-using-powershell-commands)
+* [Migration performance metrics](#migration-performance-metrics).
 * [Command-line reference](#command-line-reference)
 * [Server paths, commands, and other reference information](#server-paths-commands-and-other-reference-information)
 
 ## Data flow overview
 
-The File Transfer CLI retrieves file information from a source instance, persists this data in local databases, and migrates native files to a target instance. The following diagram provides a high-level overview of this data workflow:
+The File Migration CLI retrieves file information from a source instance, persists this data in local databases, and migrates native files to a target instance. The following diagram provides a high-level overview of this data workflow:
 
 **_INSERT DIAGRAM_**
 
@@ -28,11 +29,11 @@ The File Transfer CLI retrieves file information from a source instance, persist
 Based on this diagram, key features of the data workflow used by the File Migration CLI include:
 
 * **Accesses the source databases** - The File Migration CLI connects directly to the databases on the source instance. You must have SQL access to the source instance when executing a sync command. You can use integrated or SQL authentication for this access. For more information, see [Before you begin](#before-you-begin).
-* **Retrieves file information from source databases** - When you execute a sync command, the CLI retrieves the information for native files obtained from the master, workspace, and Invariant databases on the source instance.
-* **Populates and updates local databases** - The CLI uses the information for native files obtained from the first execution of the sync command to set a baseline. It inserts new records with this information to the local database and persists this information for future comparisons. On subsequent executions of the sync command, the CLI updates the local database records with information about new files or changes to existing ones to maintain a series of deltas.
-* **Sets up migration requests** - The deltas between the local databases and the source instance are used to determine which files have changed and may need to be migrated to a target instance. When you execute a migrate command, the CLI uses the Transfer API (TAPI) as the underlying technology for migration requests.
-* **Accesses source and target file shares** - The CLI migrates the physical files from a file share on the source instance to a file share on the target instance. For this process, you must have direct access to the file shares on the source file servers. Depending on whether the file share is accessible, the TAPI automatically chooses the _client_ for the target, such as direct, Aspera, or web. For this process, you must have system admin permissions to the target instance.
-* **Migrates files** - When you execute the migrate command, the CLI migrates native files from the source to target instance based on the file information persisted in the local databases, which identify deltas between the initial or later sync operations, and the source instance. Using the deltas ensures that only new or modified files from the source instance are migrated, eliminating the need to migrate all files when a change occurs. The CLI migrates the physical files to the target instance. The migration doesn't make any updates to the target workspace or Invariant databases.
+* **Retrieves file information from source databases** - When you execute a sync command, the File Migration CLI retrieves the information for native files obtained from the master, workspace, and Invariant databases on the source instance.
+* **Populates and updates local databases** - The File Migration CLI uses the information for native files obtained from the first execution of the sync command to set a baseline. It inserts new records with this information to the local database and persists this information for future comparisons. On subsequent executions of the sync command, the File Migration CLI updates the local database records with information about new files or changes to existing ones to maintain a series of deltas.
+* **Sets up migration requests** - The deltas between the local databases and the source instance are used to determine which files have changed and may need to be migrated to a target instance. When you execute a migrate command, the File Migration CLI uses the Transfer API (TAPI) as the underlying technology for migration requests.
+* **Accesses source and target file shares** - The File Migration CLI migrates the physical files from a file share on the source instance to a file share on the target instance. For this process, you must have direct access to the file shares on the source file servers. Depending on whether the file share is accessible, the TAPI automatically chooses the _client_ for the target, such as direct, Aspera, or web. For this process, you must also have system admin permissions to the target instance.
+* **Migrates files** - When you execute the migrate command, the File Migration CLI migrates native files from the source to target instance based on the file information persisted in the local databases, which identify deltas between the initial or later sync operations, and the source instance. Using the deltas ensures that only new or modified files from the source instance are migrated, eliminating the need to migrate all files when a change occurs. The File Migration CLI migrates the physical files to the target instance. The migration doesn't make any updates to the target workspace or Invariant databases.
 
 </details>
 
@@ -49,7 +50,7 @@ Based on this diagram, key features of the data workflow used by the File Migrat
 
 * Make sure that you have the following permissions:
 
-  * **Source instance** - You must have at least read-only permissions to all files in the source instance repository. These permissions are required to synchronize files in the source instance with the local databases built by the Migration CLI.
+  * **Source instance** - You must have at least read-only permissions to all files in the source instance repository. These permissions are required to synchronize files in the source instance with the local databases built by the File Migration CLI.
 
     Additionally, you must have read-only access to the following databases:
 
@@ -157,6 +158,20 @@ Use the following steps to migrate native files:
 
 1. In the top-level folder, right-click on the **Migrate.ps1** script, and select **Run with PowerShell**.
 2. Monitor the migration progress to ensure that all files transfer successfully. For information on performance, see [Migration performance metrics](#migration-performance-metrics).
+
+## Migration performance metrics
+
+The File Migration CLI uses the TAPI to provide some of its underlying functionality. The following table contains performance metrics for data migrated from a Hyper-V environment to a RelativityOne, using the TAPI.
+
+Data set|TAPI requested transfer rate (Mbps)|Average transfer rate (Mbps)|Elapsed time (dd:hh:mm:ss)|Transfer date
+--------|--------|--------|--------|--------
+Small|300|112|00:00:06:43|07/19/2018
+Small|55|49|00:00:13:43|07/31/2018
+Medium|300|61|00:00:17:51|07/19/2018
+Medium|55|40|00:00:27:40|07/31/2018
+Large|300|49|00:00:39:27|07/19/2018
+Large|55|38|00:00:47:40|07/31/2018
+Perf60-Processed|300|25|00:05:04:49|07/24/2018
 
 ## Command-line reference
 
@@ -610,23 +625,5 @@ The following command performs a migration and collects APM metrics. It includes
 ```
 Relativity.Migration.Console.exe /command:migrate /url:"https://hostname.mycompany.corp" /login+ /oktaforce+ /workspaces:"1171671;1171672;1171673" /apm+
 ```
-
-</details>
-
-### Migration performance metrics
-
-<details><summary>View migration performance metrics</summary>
-
-The File Migration CLI uses the TAPI to provide some of its underlying functionality. The following table contains performance metrics for data migrated from a Hyper-V environment to a RelativityOne, using the TAPI.
-
-Data set|TAPI plugin|TAPI requested transfer rate (Mbps)|Average transfer rate (Mbps)|Elapsed time (dd:hh:mm:ss)|Transfer date
---------|--------|--------|--------|--------|--------
-Small|Aspera (SAMBA)|300|112|00:00:06:43|07/19/2018
-Small|Aspera (SAMBA)|55|49|00:00:13:43|07/31/2018
-Medium|Aspera (SAMBA)|300|61|00:00:17:51|07/19/2018
-Medium|Aspera (SAMBA)|55|40|00:00:27:40|07/31/2018
-Large|Aspera (SAMBA)|300|49|00:00:39:27|07/19/2018
-Large|Aspera (SAMBA)|55|38|00:00:47:40|07/31/2018
-Perf60-Processed|Aspera (SAMBA)|300|25|00:05:04:49|07/24/2018
 
 </details>
