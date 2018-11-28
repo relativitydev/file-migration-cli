@@ -4,9 +4,9 @@ The Relativity File Migration CLI is an application used for migrating native fi
 
 The File Migration CLI supports the following commands for tracking changes on the source instance used when migrating workspaces and processing native files to the target instance:
 
-* **Sync** - use this command to initially populate the local databases that persist file information, and to identify changes to the files stored in the source instance. The File Migration CLI persists the following information for workspace and processing native files: the UNC path, size, name, SHA-1 hash for processing files, and other fields. It also updates the local databases with any new file information. For example, if new files are added to the source instance, this command updates the local databases with their details and persists it.
+* **Sync** - use this command to initially populate the local databases that persist file information, and to identify changes to the files stored in the source instance. The File Migration CLI persists the following information for workspace and processing native files: the UNC path, size, name, SHA-1 hash for processing files, and other fields. It also updates the local databases with any new file information. For example, if new files are added to the source instance, this command updates the local databases with their information and persists it.
 * **Migrate** - use this command to migrate native files from a source instance to the file share on a target Relativity instance. The File Migration CLI migrates the physical files to the specified target file share. The migration doesn't make any updates to the target workspace or Invariant databases.
-* **Report** - use this command to obtain the status information, such as the number of files pending. migration or the number of them already migrated. Run this report after synchronizing or migrating files for comparison with expected values.
+* **Report** - use this command to obtain the status information, such as the number of files pending migration or the number of them already migrated. Run this report after synchronizing or migrating files for comparison with expected values.
 
 This page contains the following information:
 
@@ -27,11 +27,11 @@ The File Transfer CLI retrieves file information from a source instance, persist
 
 Based on this diagram, key features of the data workflow used by the File Migration CLI include:
 
-* **Accesses the source databases** - The File Migration CLI connects directly to the databases on the source instance, so you must have SQL access to the source instance when executing a sync command. You can use integrated or SQL authentication for this access. For more information, see [Before you begin](#before-you-begin).
-* **Retrieves file information from source databases** - When you execute a sync command, the CLI retrieves the information for native files obtained from master, workspace, and Invariant databases on the source instance.
+* **Accesses the source databases** - The File Migration CLI connects directly to the databases on the source instance. You must have SQL access to the source instance when executing a sync command. You can use integrated or SQL authentication for this access. For more information, see [Before you begin](#before-you-begin).
+* **Retrieves file information from source databases** - When you execute a sync command, the CLI retrieves the information for native files obtained from the master, workspace, and Invariant databases on the source instance.
 * **Populates and updates local databases** - The CLI uses the information for native files obtained from the first execution of the sync command to set a baseline. It inserts new records with this information to the local database and persists this information for future comparisons. On subsequent executions of the sync command, the CLI updates the local database records with information about new files or changes to existing ones to maintain a series of deltas.
-* **Sets up migration requests** - The deltas between the local databases and the source instance are used to determine which files have changed and may need to be migrated to a target instance. When you execute a migrate command, the CLI uses the Transfer API as the underlying technology for migration requests.
-* **Accesses source and target file shares** - The CLI migrates the physical files from a file share on the source instance to a file share on the target instance. For this process, you must have direct access to the file shares on the source file servers. Depending on whether the file share is accessible, the Transfer API automatically chooses the _client_ for the target, such as direct, Aspera, or web. For this process, you must have system admin permissions to the target instance.
+* **Sets up migration requests** - The deltas between the local databases and the source instance are used to determine which files have changed and may need to be migrated to a target instance. When you execute a migrate command, the CLI uses the Transfer API (TAPI) as the underlying technology for migration requests.
+* **Accesses source and target file shares** - The CLI migrates the physical files from a file share on the source instance to a file share on the target instance. For this process, you must have direct access to the file shares on the source file servers. Depending on whether the file share is accessible, the TAPI automatically chooses the _client_ for the target, such as direct, Aspera, or web. For this process, you must have system admin permissions to the target instance.
 * **Migrates files** - When you execute the migrate command, the CLI migrates native files from the source to target instance based on the file information persisted in the local databases, which identify deltas between the initial or later sync operations, and the source instance. Using the deltas ensures that only new or modified files from the source instance are migrated, eliminating the need to migrate all files when a change occurs. The CLI migrates the physical files to the target instance. The migration doesn't make any updates to the target workspace or Invariant databases.
 
 </details>
@@ -617,7 +617,7 @@ Relativity.Migration.Console.exe /command:migrate /url:"https://hostname.mycompa
 
 <details><summary>View migration performance metrics</summary>
 
-The File Migration CLI uses the Transfer API (TAPI) to provide some of its underlying functionality. The following table contains performance metrics for data migrated from a Hyper-V environment to a RelativityOne, using the TAPI.
+The File Migration CLI uses the TAPI to provide some of its underlying functionality. The following table contains performance metrics for data migrated from a Hyper-V environment to a RelativityOne, using the TAPI.
 
 Data set|TAPI plugin|TAPI requested transfer rate (Mbps)|Average transfer rate (Mbps)|Elapsed time (dd:hh:mm:ss)|Transfer date
 --------|--------|--------|--------|--------|--------
