@@ -1,6 +1,6 @@
 # Relativity File Migration CLI
 
-The Relativity File Migration CLI is an application used for moving native files from a source to a target Relativity instance. During setup, it automatically creates local databases that it uses to persist file information retrieved from a source instance. Since the File Migration CLI persists this data, it can also provide information about deltas that occur on the source instance, such as the addition of new native files.
+The Relativity File Migration CLI is an application used for migrating native files from a source to a target Relativity instance. During setup, it automatically creates local databases that it uses to persist file information retrieved from a source instance. Since the File Migration CLI persists this data, it can also provide information about deltas that occur on the source instance, such as the addition of new native files.
 
 The File Migration CLI supports the following commands for tracking changes on the source instance used when migrating workspaces and processing native files to the target instance:
 
