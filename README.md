@@ -159,6 +159,31 @@ Use the following steps to migrate native files:
 1. In the top-level folder, right-click on the **Migrate.ps1** script, and select **Run with PowerShell**.
 2. Monitor the migration progress to ensure that all files transfer successfully. For information on performance, see [Migration performance metrics](#migration-performance-metrics).
 
+While the migration is running, the File Migration CLI outputs information about its progress to the console window, as illustrated in the following screen shot:
+
+![migrationoutput](https://user-images.githubusercontent.com/43040844/49179141-3d1e6680-f317-11e8-9b76-a7244ab83df7.png)
+
+<details><summary>View output field descriptions</summary>
+The output includes the following information:
+
+* **Progress bar** - displays across the top of the window to indicate the percentage of the job that’s completed.
+* **Status field** - the current state of the job. When the job is running, the Status field displays _In Progress_ until all the files are migrated, and then it displays _Migrated_. This field also indicates the percentage of the job that’s completed.
+* **Remaining Time** - the amount of time until the job is completed, and the number of the batch currently being migrated.
+* **Duration** - the amount of time that the migration job took to complete.
+* **Started On** - the date and time when the job was started.
+* **Finished On** - the date and time when the job was completed.
+* **Workspace** - the artifact ID of the workspace.
+* **Sub-jobs** - the _datasource_ used for the native files in the workspace. The datasources include the workspace database, and Invariant databases used by processing. For example, the screen shot indicates that the File Migration CLI identified only one sub-job for the workspace database, when the sync command was run. No sub-jobs using the Invariant databases were identified, because processing wasn’t performed in this workspace.
+* **Issues** - a count of any problems that occurred during the migration, such as retry attempts.
+* **Target Rate** - the desired speed for transferring the files from the source to the target instance in megabits per second (Mbps).
+* **Transfer Rate** - the actual speed used for transferring the files from the source to the target instance in megabits per second (Mbps).
+* **Migrated Data** - the number of megabytes (MB) transferred out of the total.
+* **Migrated Native Files** - the number native files migrated from the source to the target instance.
+* **Transfer Client** - the migration client. The File Migration CLI automatically chooses the best-fit client for the job. For example, it used the Aspera client to migrate files to the RelativityOne instance.
+* **Job ID** - a unique identifier for the migration job stored in the database.
+
+</details>
+
 ## Migration performance metrics
 
 The File Migration CLI uses the TAPI to provide some of its underlying functionality. The following table contains performance metrics for data migrated from a Hyper-V environment to a RelativityOne, using the TAPI.
