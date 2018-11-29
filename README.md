@@ -22,7 +22,7 @@ This page contains the following information:
 
 The File Migration CLI retrieves file information from a source instance, persists this data in local databases, and migrates native files to a target instance. The following diagram provides a high-level overview of this data workflow:
 
-![dataflowdiagram](https://user-images.githubusercontent.com/43040844/49255937-0c136400-f3f3-11e8-9e38-eabe1025cc50.png)
+![dataflowdiagramv2](https://user-images.githubusercontent.com/43040844/49256589-0a4aa000-f3f5-11e8-976c-b56ae874528a.png)
 
 <details><summary>View data workflow description</summary>
 
