@@ -193,9 +193,9 @@ The output includes the following information:
 
 ## Migration performance metrics
 
-The File Migration CLI uses the TAPI to provide some of its underlying functionality. The following table contains performance metrics for data migrated from a Hyper-V environment to a RelativityOne, using the TAPI.
+The File Migration CLI uses TAPI to provide some of its underlying functionality. The following table contains performance metrics for data migrated from an on-premise test environment to a RelativityOne tenant, configured with premium storage, using the Aspera transfer client.
 
-File count|File size|Requested Data Rate (Mbps)|Elapsed time (hh:mm:ss)
+File count|Size|Requested Data Rate (Mbps)|Elapsed time (hh:mm:ss)
 --------|--------|--------|--------|
 10k     |5.5GB   |55      |00:13:43|
 |       |        |300     |00:06:43|
@@ -203,9 +203,10 @@ File count|File size|Requested Data Rate (Mbps)|Elapsed time (hh:mm:ss)
 |       |        |300     |00:17:51|
 100k    |14GB    |55      |00:47:40|
 |       |        |300     |00:39:27|
-732k    |56 GB   |55      |00:00:00|
+732k    |56 GB   |55      |04:33:42|
 |       |        |300     |04:08:00|
-
+1.6M    |105 GB  |55      |00:00:00|
+|       |        |300     |09:02:08|
 
 ## Command-line reference
 
