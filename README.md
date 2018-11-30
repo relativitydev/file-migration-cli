@@ -72,7 +72,7 @@ Review the following best practices:
 
 * Run the File Migration CLI from your local machine. 
 
-* Create a new top-level folder for each set of workspaces that you want to migrate. The File Migration CLI builds separate databases for each migration when you create separate top-level folders for them. The local databases persist the data for each run on your local machine. For example, you might create a series of top-level folders, such as Phase 1, Phase 2, and so on. See the following screen shot:
+* Create a new top-level folder for each set of workspaces that you want to migrate. The File Migration CLI builds separate databases for each migration when you create separate top-level folders for them. The local databases persist the data for each run on your local machine. For example, you might create a series of top-level folders, such as PhaseOne, PhaseTwo, and so on. See the following screen shot:
 
    ![toplevelfolders](https://user-images.githubusercontent.com/43040844/49260604-f0fd2000-f403-11e8-948a-ebcc34325861.png)
 
@@ -181,7 +181,7 @@ The output includes the following information:
 * **Transfer Rate** - the actual speed used for transferring the files from the source to the target instance in megabits per second (Mbps).
 * **Migrated Data** - the number of bytes transferred out of the total. The File Migration CLI expresses this value in units that best fit the data size, such as MB, GB, TB, PB, and so on.
 
-  **Note:** When the /metadata parameter is disabled, the File Migration CLI doesn't display total file size for the migrated data in the Migrated Data field in the output on command-line console. Instead, it just displays the number of files that it has migrated. For example, it displays _Migrated Data: x GB_, but not _Migrated Data: x of y GB_. This situation may occur for files used with processing. See [Running the migrate command](#running-the-migrate-command).
+  **Note:** When the /metadata parameter is disabled, the File Migration CLI doesn't display total file size for the migrated data in the Migrated Data field. Instead, it just displays the number of files that it has migrated. For example, it displays _Migrated Data: x GB_, but not _Migrated Data: x of y GB_. This situation may occur for files used with processing. See [Running the migrate command](#running-the-migrate-command).
 
 * **Migrated Native Files** - the number native files migrated from the source to the target instance.
 * **Transfer Client** - the migration client. The File Migration CLI automatically chooses the best-fit client for the job. For example, it used the Aspera client to migrate files to the RelativityOne instance.
