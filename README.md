@@ -70,11 +70,11 @@ You can execute commands for File Migration CLI by running PowerShell scripts or
 
 Review the following best practices:
 
-* Run the File Migration CLI from your local machine. While you can run it from a file share, the File Migration CLI performs better when it runs from a local machine.
+* Run the File Migration CLI from your local machine. 
 
 * Create a new top-level folder for each set of workspaces that you want to migrate. The File Migration CLI builds separate databases for each migration when you create separate top-level folders for them. The local databases persist the data for each run on your local machine. For example, you might create a series of top-level folders, such as Phase 1, Phase 2, and so on. See the following screen shot:
 
-![toplevelfolders](https://user-images.githubusercontent.com/43040844/49260604-f0fd2000-f403-11e8-948a-ebcc34325861.png)
+   ![toplevelfolders](https://user-images.githubusercontent.com/43040844/49260604-f0fd2000-f403-11e8-948a-ebcc34325861.png)
 
 Complete the following steps to set up PowerShell scripts for the File Migration CLI:
 
@@ -123,6 +123,8 @@ Use the following steps to synchronize your data:
 1. In the top-level folder, right-click on the **Sync.ps1** script.
 2. Select **Run with PowerShell**.
 
+For performance metrics, the File Migration CLI takes approximately 5 minutes to sync 1M baseline or delta records.
+
 ### Running reports
 
 You can generate a report containing information about the progress of each workspace. Additionally, you can use it to verify that the workspaces were actually migrated as expected. For more information, see [Data flow overview](#data-flow-overview).
@@ -145,6 +147,13 @@ Use the following steps to generate a report:
 
 You can migrate native files to your target Relativity instance after you have run the sync job. For more information, see [Data flow overview](#data-flow-overview).
 
+The **Migrate.ps1** script uses the following default settings:
+
+* The transfer client is set to the Aspera client.
+* The target transfer rate is to 300 Mbps.
+
+You can modify the default settings by editing the script, and updating any of the available command-line parameters. For more information, see [Running the migrate command](#running-the-migrate-command).
+
 **Note:** Don't attempt to run a migration job unless you have already run the Sync.ps1 script, and verified that it completed successfully. See [Synchronizing a source instance with a local database](#synchronizing-a-source-instance-with-a-local-database).
 
 Use the following steps to migrate native files:
@@ -159,20 +168,25 @@ While the migration is running, the File Migration CLI outputs information about
 <details><summary>View output field descriptions</summary>
 The output includes the following information:
 
-* **Progress bar** - displays across the top of the window to indicate the percentage of the job that’s completed.
+* **Progress bar** - displays across the top of the window to indicate the percentage of the job that’s completed. When the transfer completes, the progress bar changes to a lighter shade.
 * **Status field** - the current state of the job. When the job is running, the Status field displays _In Progress_ until all the files are migrated, and then it displays _Migrated_. This field also indicates the percentage of the job that’s completed.
-* **Remaining Time** - the amount of time until the job is completed, and the number of the batch currently being migrated.
-* **Duration** - the amount of time that the migration job took to complete.
+* **Remaining Time** - the estimated amount of time until the job is completed, and the number of the batch currently being migrated.
+* **Duration** - while the job is in progress, this field displays the actual running time until it is done. After the job finishes, this field displays the amount of time that the migration took to complete.
 * **Started On** - the date and time when the job was started.
 * **Finished On** - the date and time when the job was completed.
 * **Workspace** - the artifact ID of the workspace.
 * **Sub-jobs** - the _datasource_ used for the native files in the workspace. The datasources include the workspace database, and Invariant databases used by processing. For example, the screen shot indicates that the File Migration CLI identified only one sub-job for the workspace database, when the sync command was run. No sub-jobs using the Invariant databases were identified, because processing wasn’t performed in this workspace.
-* **Issues** - a count of any problems that occurred during the migration, such as retry attempts.
-* **Target Rate** - the desired speed for transferring the files from the source to the target instance in megabits per second (Mbps).
+* **Issues** - a count of any problems that occurred during the migration, such as retry attempts. Due to space limitations, the error messages aren't displayed here, but you can find them in the log files. See [Logging](#logging).
+* **Target Rate** - the desired speed for transferring the files from the source to the target instance in megabits per second (Mbps). Not all clients support configuring the target rate.
 * **Transfer Rate** - the actual speed used for transferring the files from the source to the target instance in megabits per second (Mbps).
-* **Migrated Data** - the number of megabytes (MB) transferred out of the total.
+* **Migrated Data** - the number of bytes transferred out of the total. The File Migration CLI expresses this value in units that best fit the data size, such as MB, GB, TB, PB, and so on.
+
+  **Note:** When the /metadata parameter is disabled, the File Migration CLI doesn't display total file size for the migrated data in the Migrated Data field in the output on command-line console. Instead, it just displays the number of files that it has migrated. For example, it displays _Migrated Data: x GB_, but not _Migrated Data: x of y GB_. This situation may occur for files used with processing. See [Running the migrate command](#running-the-migrate-command).
+
 * **Migrated Native Files** - the number native files migrated from the source to the target instance.
 * **Transfer Client** - the migration client. The File Migration CLI automatically chooses the best-fit client for the job. For example, it used the Aspera client to migrate files to the RelativityOne instance.
+
+  **Note:** You can use the /configuration parameter to override the client. The output then displays the client configured with the parameter. For more information, see [Configuration settings](#configuration-settings). 
 * **Job ID** - a unique identifier for the migration job stored in the database.
 
 </details>
@@ -189,8 +203,8 @@ File count|File size|Requested Data Rate (Mbps)|Elapsed time (hh:mm:ss)
 |       |        |300     |00:17:51|
 100k    |14GB    |55      |00:47:40|
 |       |        |300     |00:39:27|
-732k    |110GB   |55      |00:00:00|
-|       |        |300     |05:04:49|
+732k    |56 GB   |55      |00:00:00|
+|       |        |300     |04:08:00|
 
 
 ## Command-line reference
@@ -390,7 +404,7 @@ Parameter|Description
 /dupfiles{+\|-}|Enables or disables the removal of duplicate files. Use it for small to medium sized workspaces, such as 1M files or less. During synchronization, this optimization increases the memory and CPU usage, and the time to completion, but it can significantly reduce the overall transfer time. <br>**Note:** By default, the parameter is enabled.
 /fileshare:{value}|The name, number, artifact identifier, or UNC path for a file share. For more information, see [UNC file paths](#unc-file-paths) and [Remote server paths](#remote-server-paths). <br>**Note:** You can optionally use the /fileshare parameter instead of the /targetpath.
 /maxsync:{value}|The maximum number of records to synchronize. Use this parameter to limit the number of records fetched with the sync command while debugging or troubleshooting. <br>**Note:** The default value is Int32.MaxValue.
-/metadata:{+\|-}|Enables or disables the retrieval of file information, such as the length in bytes, for all source files. It provides verifiable migration results and eliminates more expensive server-side validation. We recommend enabling this setting only when running the File Migration CLI from from a Windows-based server where the files are local. <br>**Note:** By default, the parameter is disabled.
+/metadata:{+\|-}|Enables or disables the retrieval of file information, such as the length in bytes, for all source files. It provides verifiable migration results and eliminates more expensive server-side validation. We recommend enabling this setting only when running the File Migration CLI from from a Windows-based server where the files are local. <br>**Note:** By default, the parameter is disabled. When this parameter is disabled, the File Migration CLI doesn't display total file size for the migrated data in the Migrated Data field in the output on command-line console. Instead, it just displays the number of files that it has migrated. For example, it displays _Migrated Data: x GB_, but not _Migrated Data: x of y GB_. This situation may occur for files used with processing.
 /sha1{+\|-}|Enables or disables the calculation of SHA1 hashes for all source files. SHA1 hashes are used to validate the migration. We recommend enabling this parameter only when running the File Migration CLI from from a Windows-based server where the files are local.<br>**Note:** By default, the parameter is disabled.
 /skipinv{+\|-}|Enables or disables skipping all Invariant files. <br>**Note:** By default, the parameter is disabled.
 /skipnative{+\|-}|Enables or disables skipping workspace native files. <br>**Note:** By default, the parameter is disabled.
@@ -399,7 +413,7 @@ Parameter|Description
 
 </details>
 
-### Generating reports
+### Running the report command
 
 When generating a report through the command-line, you can use additional filter options, such as the /jobstatus parameter. For example, you can a run a report on only completed or in progress jobs. For more information, see [Running reports](#running-reports).
 
@@ -419,7 +433,7 @@ Parameter|Description
 
 </details>
 
-### Migrating native files 
+### Running the migrate command
 
 Before you can migrate native files through the command-line, you must run the sync command, and verify that it completed successfully. You need to set the authentication parameters required by the target instance for the migration job. For more information, see [Data flow overview](#data-flow-overview).
 
