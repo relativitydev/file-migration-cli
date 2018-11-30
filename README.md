@@ -74,6 +74,8 @@ Review the following best practices:
 
 * Create a new top-level folder for each set of workspaces that you want to migrate. The File Migration CLI builds separate databases for each migration when you create separate top-level folders for them. The local databases persist the data for each run on your local machine. For example, you might create a series of top-level folders, such as Phase 1, Phase 2, and so on. See the following screen shot:
 
+![toplevelfolders](https://user-images.githubusercontent.com/43040844/49260604-f0fd2000-f403-11e8-948a-ebcc34325861.png)
+
 Complete the following steps to set up PowerShell scripts for the File Migration CLI:
 
 1. Download the [Relativity.FileMigrator.zip](https://github.com/relativitydev/file-migrator-cli/releases) file.
@@ -91,12 +93,7 @@ Complete the following steps to set up PowerShell scripts for the File Migration
     * Enter the path for the target file share. For example, it should have this general format: _\\\files\T002\files_.
     * Enter a semi-colon delimited list of workspaces to migrate. For example, the list has this format: _1580162;1580184;1580194_.
 
-1. After the setup completes, verify that the following scripts have been added to the top-level folder:
-     * Migrate.ps1
-     * Report.ps1
-     * Sync.ps1
-  
-     For information about running the scripts, see [Common workflows using PowerShell commands](#common-workflows-using-powershell-commands).
+    After the setup completes, the top-level folder contains the PowerShell scripts used for running the File Migration CLI. For information, see [Common workflows using PowerShell commands](#common-workflows-using-powershell-commands).
 
 1. If you are using SQL authentication, complete these steps:
 
@@ -119,15 +116,12 @@ You can use the PowerShell scripts provided with the File Migration CLI to synch
 
 Before performing a migration, you must build local databases that store the information for the native files in the source instance. The File Migration CLI builds these databases when you run a sync job for the first time. When you run subsequent jobs, the synch command updates your local databases with any changes made to the files in the source instance and continues to persist this information. For more information, see [Data flow overview](#data-flow-overview).
 
-**Note:** The File Migration CLI can optionally retrieve the SHA-1 hash for processing files when you specify it as a parameter through the command-line. It calculates the hash if it doesn't already exist for the file in the database. For more information, see [Running the sync command](#running-the-sync-command).
+**Note:** The File Migration CLI can optionally retrieve the SHA-1 hash for files when you specify it as a parameter through the command-line. It calculates the hash if it doesn't already exist for each file in the database. Processing files frequently have a SHA-1 hash. For more information, see [Running the sync command](#running-the-sync-command).
 
 Use the following steps to synchronize your data:
 
-1. In the top-level folder, right-click on the **Sync.ps1** script, and select **Run with PowerShell**.
-1. After the scripted runs, verify that the following items were created:
-
-    * LocalDB folder 
-    * An local database for each of the specified workspaces exists in folder
+1. In the top-level folder, right-click on the **Sync.ps1** script.
+2. Select **Run with PowerShell**.
 
 ### Running reports
 
@@ -264,7 +258,7 @@ When you execute the sync command, you must authenticate to the source, such as 
    /command:sync /sqlinstance:"sqlinstance.mycompany.corp" /sqlpwd:"P@ssw0rd@1" /sqluser:"sa" /url:"https://hostname.mycompany.corp" /login+ /enforcessl- /targetpath:"\\files\SomeFolder\Files" /sqlintegrated- /workspaces:"1027428"
     ```
 
-* **Integrated login for SQL Server** - You can use integrated login to authenticate to the SQL Server by enabling the /sqlintegrated parameter. In this case, you don't need to provide a username and password for the SQL Server.
+* **Integrated login for SQL Server** - You can use integrated login to authenticate to the source SQL Server by enabling the /sqlintegrated parameter. In this case, you don't need to provide a username and password for the SQL Server.
 
      Integrated login for SQL Server has the following general command format:
 
@@ -285,7 +279,7 @@ Parameter|Description
 --------------|------------------
 /enforcessl{+\|-}|Enables or disables secure sockets layer (SSL) validation when executing a command. <br>**Note:** By default, this parameter is enabled. It ensures that SSL is well-tested across all environments. If the File Migration CLI reports SSL errors, we recommend that you configure your environment with a certificate, which doesn’t include wildcards. We also recommend that you don’t suppress SSL validation.
 /sqlinstance:{value}|The instance name for the source SQL Server.
-/sqlintegrated:{+\|-}|Enables or disables integrated authentication for the SQL Server. If this param is disabled, then you must specify values for the /sqlpwd and /sqluser parameters. <br>**Note:** By default, the parameter is disabled.
+/sqlintegrated:{+\|-}|Enables or disables integrated authentication for the source SQL Server. If this param is disabled, then you must specify values for the /sqlpwd and /sqluser parameters. <br>**Note:** By default, the parameter is disabled.
 /sqlpwd:{value}|The password for the source SQL Server. Only required for SQL authentication.
 /sqluser:{value}|The username for the source SQL Server. Only required for SQL authentication.
 /url:{value}|The Relativity base URL for the target instance. Don't enter the web service URL used by the Relativity Desktop Client, which has the format https://\<MyServiceName\>/RelativityWebAPI/.
@@ -315,7 +309,7 @@ This list describes the methods available for authenticating to a target through
     ```
     Relativity.Migration.Console.exe /command:migrate /url:"https://hostname.mycompany.corp" /username:<"Value"> /password:<"Value"> /workspaces:"1171671;1171672;1171673"
     ```
-* **Interactive login** - You can use interactive login when a Relativity login is required for the migrate command. For example, use interactive login for a migrating data to an environment, where you haven't been assigned an Okta provider for authentication. The following command displays the Relativity login dialog where you can enter your credentials:
+* **Interactive login** - You can use interactive login when a Relativity login is required for the migrate command. For example, use interactive login for a migrating data to an environment, when a password provider has been assigned. The following command displays the Relativity login dialog where you can enter your credentials:
 
      Interactive login has the following general command format:
 
@@ -359,9 +353,11 @@ Parameter|Description
 
 ### Running the sync command
 
-The sync command builds and populates local databases with information about the native files obtained from the source instance. The File Migration CLI persists the following information for workspace and processing native files: the UNC path, size, name, SHA-1 hash for processing files, and other fields. You must run this command before you attempt to migrate any native files.
+The sync command builds and populates local databases with information about the native files obtained from the source instance. The File Migration CLI persists the following information for workspace and processing native files: the UNC path, size, name, and other fields. You must run this command before you attempt to migrate any native files.
 
 After the File Migration CLI builds the local databases, you can use the sync command to update them when changes have occurred in the source instance. You have the option to sync all the workspace databases from the source, or a specific group of them. For more information, see [Data flow overview](#data-flow-overview).
+
+**Note:** The File Migration CLI can optionally retrieve the SHA-1 hash for files when you specify the /sha1 parameter. It calculates the hash if it doesn't already exist for each file in the database. Processing files frequently have a SHA-1 hash.
 
 #### First-time setup or delta sync of local databases
 
@@ -391,13 +387,13 @@ The following table describes each of the parameters used in a migration command
 
 Parameter|Description
 --------------|------------------
-/dupfiles{+\|-}|Enables or disables the removal of duplicate files. During synchronization, this optimization increases the memory and CPU usage, and the time to completion, but it can significantly reduce the overall transfer time. <br>**Note:** By default, the parameter is enabled.
+/dupfiles{+\|-}|Enables or disables the removal of duplicate files. Use it for small to medium sized workspaces, such as 1M files or less. During synchronization, this optimization increases the memory and CPU usage, and the time to completion, but it can significantly reduce the overall transfer time. <br>**Note:** By default, the parameter is enabled.
 /fileshare:{value}|The name, number, artifact identifier, or UNC path for a file share. For more information, see [UNC file paths](#unc-file-paths) and [Remote server paths](#remote-server-paths). <br>**Note:** You can optionally use the /fileshare parameter instead of the /targetpath.
 /maxsync:{value}|The maximum number of records to synchronize. Use this parameter to limit the number of records fetched with the sync command while debugging or troubleshooting. <br>**Note:** The default value is Int32.MaxValue.
 /metadata:{+\|-}|Enables or disables the retrieval of file information, such as the length in bytes, for all source files. It provides verifiable migration results and eliminates more expensive server-side validation. We recommend enabling this setting only when running the File Migration CLI from from a Windows-based server where the files are local. <br>**Note:** By default, the parameter is disabled.
 /sha1{+\|-}|Enables or disables the calculation of SHA1 hashes for all source files. SHA1 hashes are used to validate the migration. We recommend enabling this parameter only when running the File Migration CLI from from a Windows-based server where the files are local.<br>**Note:** By default, the parameter is disabled.
-/skipinv{+\|-}|Enables or disables skipping Invariant files. <br>**Note:** By default, the parameter is disabled.
-/skipnative{+\|-}|Enables or disables skipping native files. <br>**Note:** By default, the parameter is disabled.
+/skipinv{+\|-}|Enables or disables skipping all Invariant files. <br>**Note:** By default, the parameter is disabled.
+/skipnative{+\|-}|Enables or disables skipping workspace native files. <br>**Note:** By default, the parameter is disabled.
 /targetpath:{value}|The target path used for synching databases or workspaces. This parameter is only used by the sync command. The File Migration CLI migrates files to this location specified by this parameter. For more information, see [UNC file paths](#unc-file-paths) and [Remote server paths](#remote-server-paths). <br>**Note:** You can optionally use the /fileshare parameter instead of the /targetpath.
 /workspaces:{value}|The artifact IDs for a list of Relativity workspaces that you want to filter on when running a specific command. This parameter supports the following syntax:<ul><li>A list of semicolon delimited artifact IDs, such as _1171671;1171672;1171673_</li><li>The start and end of range separated by a dash, such as _1171671-1171673_ </li></ul>
 
@@ -447,11 +443,11 @@ Parameter|Description
 --------------|--------------
 /fileshare:{value}|The name, number, artifact identifier, or UNC path for a file share. For more information, see [UNC file paths](#unc-file-paths) and [Remote server paths](#remote-server-paths). <br>**Note:** You can optionally use the /fileshare parameter instead of the /targetpath.
 /maxbytesperbatch:{value}|The maximum number of bytes per batch. <br>**Note:** The default value is 100GB.
-/maxfilesperbatch:{value}|The maximum number of files per batch. <br>**Note:** The default value is 1M.
+/maxfilesperbatch:{value}|The maximum number of files per batch. <br>**Note:** The default value is 50,000.
 /maxhttpattempts:{value}|The maximum number of HTTP retry attempts. <br>**Note:** The default value is 5.
 /reset{+\|-}|Forces the re-migration of all files. For example, you previously migrated a workspace, and then re-execute the migrate command on the same workspace. The File Migration CLI checks the database, and then quickly terminates the command because it determined that the files have been migrated. If you execute the migrate command with the /reset+ parameter, then the workspace is re-migrated.<br>**Note:** By default, the parameter is disabled.
-/skipinv{+\|-}|Enables or disables skipping Invariant files. <br>**Note:** By default, the parameter is disabled.
-/skipnative{+\|-}|Enables or disables skipping native files. <br>**Note:** By default, the parameter is disabled.
+/skipinv{+\|-}|Enables or disables skipping all Invariant files. <br>**Note:** By default, the parameter is disabled.
+/skipnative{+\|-}|Enables or disables skipping workspace native files. <br>**Note:** By default, the parameter is disabled.
 /subjob:{value}|The subjob filter applied to certain migration commands. For example, if you set the value of this parameter to InvariantDbStorage, and executed the migrate command, only workspaces with files in the Invariant DB Storage table are migrated. Supported values include: <ul><li>None</li><li>WorkspaceDbFiles</li><li>InvariantDbStorage </li><li>InvariantDbPages</li><li>InvariantTemporaryNative</li></ul>
 /workspaces:{value}|The artifact IDs for a list of Relativity workspace that you want to filter on when running a specific command. This parameter supports the following syntax:<ul><li>A list of semicolon delimited artifact IDs, such as _1171671;1171672;1171673_</li><li>The start and end of range separated by a dash, such as _1171671-1171673_ </li></ul>
 
