@@ -195,8 +195,6 @@ The output includes the following information:
 
 The following table contains performance metrics for data migrated from an on-premise test environment to a RelativityOne tenant, configured with premium storage, using the Aspera transfer client.
 
-513063.365836584
-
 |File count|Size    |Average File Size|Requested Data Rate (Mbps)|Elapsed time (HH:mm:ss)|
 |----------|--------|-----------------|--------------------------|-----------------------|
 |6         |1GB     |155 MB           |55                        |00:02:44               |
