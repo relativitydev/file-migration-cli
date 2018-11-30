@@ -193,20 +193,27 @@ The output includes the following information:
 
 ## Migration performance metrics
 
-The File Migration CLI uses TAPI to provide some of its underlying functionality. The following table contains performance metrics for data migrated from an on-premise test environment to a RelativityOne tenant, configured with premium storage, using the Aspera transfer client.
+The following table contains performance metrics for data migrated from an on-premise test environment to a RelativityOne tenant, configured with premium storage, using the Aspera transfer client.
 
-File count|Size|Requested Data Rate (Mbps)|Elapsed time (hh:mm:ss)
---------|--------|--------|--------|
-10k     |5.5GB   |55      |00:13:43|
-|       |        |300     |00:06:43|
-50k     |8GB     |55      |00:27:40|
-|       |        |300     |00:17:51|
-100k    |14GB    |55      |00:47:40|
-|       |        |300     |00:39:27|
-732k    |56 GB   |55      |04:33:42|
-|       |        |300     |04:08:00|
-1.6M    |105 GB  |55      |00:00:00|
-|       |        |300     |09:02:08|
+513063.365836584
+
+|File count|Size    |Average File Size|Requested Data Rate (Mbps)|Elapsed time (HH:mm:ss)|
+|----------|--------|-----------------|--------------------------|-----------------------|
+|6         |1GB     |155 MB           |55                        |00:02:44               |
+|          |        |                 |300                       |00:00:39 (76% decrease)|
+|10k       |5.5GB   |502 KB           |55                        |00:13:37               |
+|          |        |                 |300                       |00:05:18 (61% decrease)|
+|50k       |8GB     |168 KB           |55                        |00:26:40               |
+|          |        |                 |300                       |00:23:14 (13% decrease)|
+|100k      |14GB    |138 KB           |55                        |00:47:10               |
+|          |        |                 |300                       |00:34:14 (28% decrease)|
+|732k      |56 GB   |80 KB            |55                        |04:33:42               |
+|          |        |                 |300                       |04:08:00 (10% decrease)|
+|1.6M      |105 GB  |76 KB            |55                        |11:18:30               |
+|          |        |                 |300                       |09:02:08 (20% decrease)|
+
+* Workspaces with a large number of small files represents the primary transfer bottleneck.
+* Increasing the requested transfer rate improves performance for larger files.
 
 ## Command-line reference
 
@@ -406,7 +413,7 @@ Parameter|Description
 /fileshare:{value}|The name, number, artifact identifier, or UNC path for a file share. For more information, see [UNC file paths](#unc-file-paths) and [Remote server paths](#remote-server-paths). <br>**Note:** You can optionally use the /fileshare parameter instead of the /targetpath.
 /maxsync:{value}|The maximum number of records to synchronize. Use this parameter to limit the number of records fetched with the sync command while debugging or troubleshooting. <br>**Note:** The default value is Int32.MaxValue.
 /metadata:{+\|-}|Enables or disables the retrieval of file information, such as the length in bytes, for all source files. It provides verifiable migration results and eliminates more expensive server-side validation. We recommend enabling this setting only when running the File Migration CLI from from a Windows-based server where the files are local. <br>**Note:** By default, the parameter is disabled. When this parameter is disabled, the File Migration CLI doesn't display total file size for the migrated data in the Migrated Data field in the output on command-line console. Instead, it just displays the number of files that it has migrated. For example, it displays _Migrated Data: x GB_, but not _Migrated Data: x of y GB_. This situation may occur for files used with processing.
-/sha1{+\|-}|Enables or disables the calculation of SHA1 hashes for all source files. SHA1 hashes are used to validate the migration. We recommend enabling this parameter only when running the File Migration CLI from from a Windows-based server where the files are local.<br>**Note:** By default, the parameter is disabled.
+/sha1{+\|-}|Enables or disables the calculation of SHA-1 hashes for all source files. SHA-1 hashes are used to validate the migration. We recommend enabling this parameter only when running the File Migration CLI from from a Windows-based server where the files are local.<br>**Note:** By default, the parameter is disabled.
 /skipinv{+\|-}|Enables or disables skipping all Invariant files. <br>**Note:** By default, the parameter is disabled.
 /skipnative{+\|-}|Enables or disables skipping workspace native files. <br>**Note:** By default, the parameter is disabled.
 /targetpath:{value}|The target path used for synching databases or workspaces. This parameter is only used by the sync command. The File Migration CLI migrates files to this location specified by this parameter. For more information, see [UNC file paths](#unc-file-paths) and [Remote server paths](#remote-server-paths). <br>**Note:** You can optionally use the /fileshare parameter instead of the /targetpath.
