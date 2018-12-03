@@ -193,25 +193,26 @@ The output includes the following information:
 
 ## Migration performance metrics
 
-The following table contains performance metrics for data migrated from an on-premise test environment to a RelativityOne tenant, configured with premium storage, using the Aspera transfer client.
+The following table contains performance metrics for data migrated from an on-premise test environment to a RelativityOne tenant with managed networking enabled and using the Aspera transfer client.
 
-|File count|Size    |Average File Size|Requested Data Rate (Mbps)|Elapsed time (HH:mm:ss)|
-|----------|--------|-----------------|--------------------------|-----------------------|
-|6         |1GB     |155 MB           |55                        |00:02:44               |
-|          |        |                 |300                       |00:00:39 (76% decrease)|
-|10k       |5.5GB   |502 KB           |55                        |00:13:37               |
-|          |        |                 |300                       |00:05:18 (61% decrease)|
-|50k       |8GB     |168 KB           |55                        |00:26:40               |
-|          |        |                 |300                       |00:23:14 (13% decrease)|
-|100k      |14GB    |138 KB           |55                        |00:47:10               |
-|          |        |                 |300                       |00:34:14 (28% decrease)|
-|732k      |56 GB   |80 KB            |55                        |04:33:42               |
-|          |        |                 |300                       |04:08:00 (10% decrease)|
-|1.6M      |105 GB  |76 KB            |55                        |11:18:30               |
-|          |        |                 |300                       |09:02:08 (20% decrease)|
+|File count|Size    |Average File Size|Requested Data Rate (Mbps)|HDD Storage (HH:mm:ss)|Premium Storage (HH:mm:ss)|
+|----------|--------|-----------------|--------------------------|----------------------|--------------------------|
+|6         |1GB     |155 MB           |55                        |00:02:41              |00:02:44                  |
+|          |        |                 |300                       |00:00:37              |00:00:39                  |
+|10k       |5.5GB   |502 KB           |55                        |00:13:28              |00:13:37                  |
+|          |        |                 |300                       |00:04:54              |00:05:18                  |
+|50k       |8GB     |168 KB           |55                        |00:25:42              |00:26:40                  |
+|          |        |                 |300                       |00:16:11              |00:21:46                  |
+|100k      |14GB    |138 KB           |55                        |00:44:48              |00:47:10                  |
+|          |        |                 |300                       |00:37:12              |00:34:14                  |
+|732k      |56 GB   |80 KB            |55                        |04:30:00              |04:33:42                  |
+|          |        |                 |300                       |04:29:49              |04:08:00                  |
+|1.6M      |105 GB  |76 KB            |55                        |10:31:47              |11:18:30                  |
+|          |        |                 |300                       |10:19:35              |09:02:08                  |
 
 * Workspaces with a large number of small files represents the primary transfer bottleneck.
-* Increasing the requested transfer rate improves performance for larger files.
+* Increasing the requested transfer rate greatly improves performance for larger files.
+* Premium storage is more beneficial when transferring large file counts at higher data rates.
 
 ## Command-line reference
 
